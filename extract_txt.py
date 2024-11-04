@@ -46,6 +46,16 @@ def create_tables(engine):
         Column('address', String)
     )
 
+    # Define the 'notes' table
+    notes_table = Table('notes', metadata,
+        Column('note_id', Integer, primary_key=True),  # Assuming note_id can be a string
+        Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Foreign key to 'contacts'
+        Column('author', String),
+        Column('written_date', String),  # You can change this to DateTime if you want to store actual dates
+        Column('about', String),
+        Column('body', String)
+    )
+
     # Create both tables in the database (if they don't already exist)
     metadata.create_all(engine)
 
@@ -109,7 +119,7 @@ def process_file(file_path, engine):
         'tags': ', '.join(contact_header.get('Tags', [])) if contact_header.get('Tags') else None
     }
 
-    insert_to_sql_server(engine, 'contacts', contact_header_data)
+    # insert_to_sql_server(engine, 'contacts', contact_header_data)
     print(f"Inserted contact record: {contact_header_data}")
 
 
@@ -168,52 +178,57 @@ def process_file(file_path, engine):
                     insert_to_sql_server(engine, 'address', address_data)
                     print(f"Inserted address record: {address_data}")
         
-               
 
+    """ Notes  -----------------------------------------------------------------------------    
+    data[4] + 
+    """ 
+    if len(data) > 3 and 'Note' in data[4]:
+        contact_info = data[2]['Contact']
+        phone_numbers = []
+        email_addresses = []
+        addresses = []
 
-
-
+        for item in contact_info:
     
-    """ Email Addresses ----------------------------------------------------------------------------
-    data[2]['Contact'][0] = "Email_addresses"
-    """ 
-    # if len(data) > 2 and 'Contact' in data[2]:
+    if len(data) > 4:
+        notes = data[4:]  # Start from data[4] to include all subsequent notes
+        for note in notes:
+            if isinstance(note, list) and note.startswith('Note'):
+                note_id = note.split()[1].rstrip(':')  # Extract the note ID
+                author = None
+                written_date = None
+                about = None
+                body = None
 
-    #     for item in data[2]['Contact']:
-    #         if isinstance(item, list) and 'Email_addresses' in item[0]:
-    #             email_addresses = item[1]
+                # Extract the relevant details from the note
+                for line in notes[notes.index(note) + 1:]:
+                    if line.startswith('Author:'):
+                        author = line.split('Author:')[1].strip()
+                    elif line.startswith('Written:'):
+                        written_date = line.split('Written:')[1].strip().strip('"')
+                    elif line.startswith('About:'):
+                        about = line.split('About:')[1].strip()
+                    elif line.startswith('Body:'):
+                        body = line.split('Body:')[1].strip()
 
-    #     for email_address in email_addresses:
-    #         email_data = {
-    #             'contact_id': contact_header_data['id'],
-    #             'email_address': email_address
-    #         }
+                    # Break when reaching the next note
+                    if isinstance(line, str) and line.startswith('Note'):
+                        break
+                
+                # Prepare data for the notes table
+                note_data = {
+                    'note_id': note_id,
+                    'contact_id': contact_header_data['id'],
+                    'author': author,
+                    'written_date': written_date,
+                    'about': about,
+                    'body': body
+                }
+                
+                # Insert note data into the SQL Server table
+                insert_to_sql_server(engine, 'notes', note_data)  # Assuming a 'notes' table exists
+                print(f"Inserted note record: {note_data}")
 
-    #         insert_to_sql_server(engine, 'email', email_data)
-    #         print(f"Inserted phone record: {email_data}")
-
-    """  Addresses ----------------------------------------------------------------------------
-    data[2]['Contact'][0] = "Addresses"
-    """ 
-    # if len(data) > 2 and 'Contact' in data[2]:
-    #     email_addresses = []
-
-    #     for item in data[2]['Contact']:
-    #         if isinstance(item, list) and 'Addresses' in item[0]:
-    #             email_addresses = item[1]
-
-    #     for email_address in email_addresses:
-    #         email_data = {
-    #             'contact_id': contact_header_data['id'],
-    #             'email_address': email_address
-    #         }
-
-    #         insert_to_sql_server(engine, 'email', email_data)
-    #         print(f"Inserted phone record: {email_data}")
-
-    """ Notes & Tasks -----------------------------------------------------------------------------
-    phone_numbers = data[2]['Contact']
-    """ 
 
     # # Assuming the entire file represents a single contact
     # if isinstance(data, list) and len(data) > 0:
@@ -254,7 +269,7 @@ if __name__ == '__main__':
     create_tables(engine)
 
     # Process the file and insert data
-    file_path = r'D:\Baldante\highrise-export-May03-CorinneMorgan\contacts\Aakhir Muhammad.txt'
+    file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts\Dylan Valladares.txt'
     # file_path = r'D:\Baldante\highrise-export-May03-CorinneMorgan\contacts\Kathleen (goes by Katie) Kiley (Ferriola).txt'
     process_file(file_path, engine)
 

@@ -313,166 +313,166 @@ GO
 --WHERE isnull(email,'') <> ''
 --GO
 
-------------------------------------------------------
----- INSERT AADMIN USER IF DOES NOT ALREADY EXIST
-------------------------------------------------------
---IF (
---	select count(*)
---	from sma_mst_users
---	where usrsloginid = 'aadmin'
---	) = 0
---BEGIN
---	SET IDENTITY_INSERT sma_mst_users ON
+----------------------------------------------------
+-- INSERT AADMIN USER IF DOES NOT ALREADY EXIST
+----------------------------------------------------
+IF (
+	select count(*)
+	from sma_mst_users
+	where usrsloginid = 'aadmin'
+	) = 0
+BEGIN
+	SET IDENTITY_INSERT sma_mst_users ON
 
---	INSERT INTO [sma_MST_Users]
---	(
---		usrnuserid
---		,[usrnContactID]
---		,[usrsLoginID]
---		,[usrsPassword]
---		,[usrsBackColor]
---		,[usrsReadBackColor]
---		,[usrsEvenBackColor]
---		,[usrsOddBackColor]
---		,[usrnRoleID]
---		,[usrdLoginDate]
---		,[usrdLogOffDate]
---		,[usrnUserLevel]
---		,[usrsWorkstation]
---		,[usrnPortno]
---		,[usrbLoggedIn]
---		,[usrbCaseLevelRights]
---		,[usrbCaseLevelFilters]
---		,[usrnUnsuccesfulLoginCount]
---		,[usrnRecUserID]
---		,[usrdDtCreated]
---		,[usrnModifyUserID]
---		,[usrdDtModified]
---		,[usrnLevelNo]
---		,[usrsCaseCloseColor]
---		,[usrnDocAssembly]
---		,[usrnAdmin]
---		,[usrnIsLocked]
---		,[usrbActiveState]
---	)
---	SELECT DISTINCT
---		368							as usrnuserid
---		,(
---			SELECT
---				TOP 1
---				cinnContactID
---			FROM
---				dbo.sma_MST_IndvContacts
---			WHERE
---				cinslastname = 'Unassigned'
---				AND cinsfirstname = 'Staff'
---		)							as usrnContactID
---		,'aadmin'					as usrsLoginID
---		,'2/'				 as usrsPassword
---		,null						as [usrsBackColor]
---		,null						as [usrsReadBackColor]
---		,null						as [usrsEvenBackColor]
---		,null						as [usrsOddBackColor]
---		,33							as [usrnRoleID]
---		,null						as [usrdLoginDate]
---		,null						as [usrdLogOffDate]
---		,null						as [usrnUserLevel]
---		,null						as [usrsWorkstation]
---		,null						as [usrnPortno]
---		,null						as [usrbLoggedIn]
---		,null						as [usrbCaseLevelRights]
---		,null						as [usrbCaseLevelFilters]
---		,null						as [usrnUnsuccesfulLoginCount]
---		,1							as [usrnRecUserID]
---		,GETDATE()					as [usrdDtCreated]
---		,null						as [usrnModifyUserID]
---		,null						as [usrdDtModified]
---		,null						as [usrnLevelNo]
---		,null						as [usrsCaseCloseColor]
---		,null						as [usrnDocAssembly]
---		,null						as [usrnAdmin]
---		,null						as [usrnIsLocked]
---		,1							as [usrbActiveState]
---	SET IDENTITY_INSERT sma_mst_users OFF
---END
+	INSERT INTO [sma_MST_Users]
+	(
+		usrnuserid
+		,[usrnContactID]
+		,[usrsLoginID]
+		,[usrsPassword]
+		,[usrsBackColor]
+		,[usrsReadBackColor]
+		,[usrsEvenBackColor]
+		,[usrsOddBackColor]
+		,[usrnRoleID]
+		,[usrdLoginDate]
+		,[usrdLogOffDate]
+		,[usrnUserLevel]
+		,[usrsWorkstation]
+		,[usrnPortno]
+		,[usrbLoggedIn]
+		,[usrbCaseLevelRights]
+		,[usrbCaseLevelFilters]
+		,[usrnUnsuccesfulLoginCount]
+		,[usrnRecUserID]
+		,[usrdDtCreated]
+		,[usrnModifyUserID]
+		,[usrdDtModified]
+		,[usrnLevelNo]
+		,[usrsCaseCloseColor]
+		,[usrnDocAssembly]
+		,[usrnAdmin]
+		,[usrnIsLocked]
+		,[usrbActiveState]
+	)
+	SELECT DISTINCT
+		368							as usrnuserid
+		,(
+			SELECT
+				TOP 1
+				cinnContactID
+			FROM
+				dbo.sma_MST_IndvContacts
+			WHERE
+				cinslastname = 'Unassigned'
+				AND cinsfirstname = 'Staff'
+		)							as usrnContactID
+		,'aadmin'					as usrsLoginID
+		,'2/'				 as usrsPassword
+		,null						as [usrsBackColor]
+		,null						as [usrsReadBackColor]
+		,null						as [usrsEvenBackColor]
+		,null						as [usrsOddBackColor]
+		,33							as [usrnRoleID]
+		,null						as [usrdLoginDate]
+		,null						as [usrdLogOffDate]
+		,null						as [usrnUserLevel]
+		,null						as [usrsWorkstation]
+		,null						as [usrnPortno]
+		,null						as [usrbLoggedIn]
+		,null						as [usrbCaseLevelRights]
+		,null						as [usrbCaseLevelFilters]
+		,null						as [usrnUnsuccesfulLoginCount]
+		,1							as [usrnRecUserID]
+		,GETDATE()					as [usrdDtCreated]
+		,null						as [usrnModifyUserID]
+		,null						as [usrdDtModified]
+		,null						as [usrnLevelNo]
+		,null						as [usrsCaseCloseColor]
+		,null						as [usrnDocAssembly]
+		,null						as [usrnAdmin]
+		,null						as [usrnIsLocked]
+		,1							as [usrbActiveState]
+	SET IDENTITY_INSERT sma_mst_users OFF
+END
 
-------------------------------------------------------
----- INSERT CONVERSION USER IF DOES NOT ALREADY EXIST
-------------------------------------------------------
---IF (
---	select count(*)
---	from sma_mst_users
---	where usrsloginid = 'conversion'
---	) = 0
---BEGIN
---	INSERT INTO [sma_MST_Users]
---	(
---		[usrnContactID]
---		,[usrsLoginID]
---		,[usrsPassword]
---		,[usrsBackColor]
---		,[usrsReadBackColor]
---		,[usrsEvenBackColor]
---		,[usrsOddBackColor]
---		,[usrnRoleID]
---		,[usrdLoginDate]
---		,[usrdLogOffDate]
---		,[usrnUserLevel]
---		,[usrsWorkstation]
---		,[usrnPortno]
---		,[usrbLoggedIn]
---		,[usrbCaseLevelRights]
---		,[usrbCaseLevelFilters]
---		,[usrnUnsuccesfulLoginCount]
---		,[usrnRecUserID]
---		,[usrdDtCreated]
---		,[usrnModifyUserID]
---		,[usrdDtModified]
---		,[usrnLevelNo]
---		,[usrsCaseCloseColor]
---		,[usrnDocAssembly]
---		,[usrnAdmin]
---		,[usrnIsLocked]
---		,[usrbActiveState]
---	)
---	SELECT DISTINCT
---		(
---			SELECT
---				TOP 1
---				cinnContactID
---			FROM
---				dbo.sma_MST_IndvContacts
---			WHERE
---				cinslastname = 'Unassigned'
---				AND cinsfirstname = 'Staff'
---		)							as usrnContactID
---		,'conversion'				as usrsLoginID
---		,'pass'				 		as usrsPassword
---		,null						as [usrsBackColor]
---		,null						as [usrsReadBackColor]
---		,null						as [usrsEvenBackColor]
---		,null						as [usrsOddBackColor]
---		,33							as [usrnRoleID]
---		,null						as [usrdLoginDate]
---		,null						as [usrdLogOffDate]
---		,null						as [usrnUserLevel]
---		,null						as [usrsWorkstation]
---		,null						as [usrnPortno]
---		,null						as [usrbLoggedIn]
---		,null						as [usrbCaseLevelRights]
---		,null						as [usrbCaseLevelFilters]
---		,null						as [usrnUnsuccesfulLoginCount]
---		,1							as [usrnRecUserID]
---		,GETDATE()					as [usrdDtCreated]
---		,null						as [usrnModifyUserID]
---		,null						as [usrdDtModified]
---		,null						as [usrnLevelNo]
---		,null						as [usrsCaseCloseColor]
---		,null						as [usrnDocAssembly]
---		,null						as [usrnAdmin]
---		,null						as [usrnIsLocked]
---		,1							as [usrbActiveState]
---END
+----------------------------------------------------
+-- INSERT CONVERSION USER IF DOES NOT ALREADY EXIST
+----------------------------------------------------
+IF (
+	select count(*)
+	from sma_mst_users
+	where usrsloginid = 'conversion'
+	) = 0
+BEGIN
+	INSERT INTO [sma_MST_Users]
+	(
+		[usrnContactID]
+		,[usrsLoginID]
+		,[usrsPassword]
+		,[usrsBackColor]
+		,[usrsReadBackColor]
+		,[usrsEvenBackColor]
+		,[usrsOddBackColor]
+		,[usrnRoleID]
+		,[usrdLoginDate]
+		,[usrdLogOffDate]
+		,[usrnUserLevel]
+		,[usrsWorkstation]
+		,[usrnPortno]
+		,[usrbLoggedIn]
+		,[usrbCaseLevelRights]
+		,[usrbCaseLevelFilters]
+		,[usrnUnsuccesfulLoginCount]
+		,[usrnRecUserID]
+		,[usrdDtCreated]
+		,[usrnModifyUserID]
+		,[usrdDtModified]
+		,[usrnLevelNo]
+		,[usrsCaseCloseColor]
+		,[usrnDocAssembly]
+		,[usrnAdmin]
+		,[usrnIsLocked]
+		,[usrbActiveState]
+	)
+	SELECT DISTINCT
+		(
+			SELECT
+				TOP 1
+				cinnContactID
+			FROM
+				dbo.sma_MST_IndvContacts
+			WHERE
+				cinslastname = 'Unassigned'
+				AND cinsfirstname = 'Staff'
+		)							as usrnContactID
+		,'conversion'				as usrsLoginID
+		,'pass'				 		as usrsPassword
+		,null						as [usrsBackColor]
+		,null						as [usrsReadBackColor]
+		,null						as [usrsEvenBackColor]
+		,null						as [usrsOddBackColor]
+		,33							as [usrnRoleID]
+		,null						as [usrdLoginDate]
+		,null						as [usrdLogOffDate]
+		,null						as [usrnUserLevel]
+		,null						as [usrsWorkstation]
+		,null						as [usrnPortno]
+		,null						as [usrbLoggedIn]
+		,null						as [usrbCaseLevelRights]
+		,null						as [usrbCaseLevelFilters]
+		,null						as [usrnUnsuccesfulLoginCount]
+		,1							as [usrnRecUserID]
+		,GETDATE()					as [usrdDtCreated]
+		,null						as [usrnModifyUserID]
+		,null						as [usrdDtModified]
+		,null						as [usrnLevelNo]
+		,null						as [usrsCaseCloseColor]
+		,null						as [usrnDocAssembly]
+		,null						as [usrnAdmin]
+		,null						as [usrnIsLocked]
+		,1							as [usrbActiveState]
+END
 
 ------------------------------------------------------
 ---- Add [saga] to [sma_MST_Users] if it does not exist

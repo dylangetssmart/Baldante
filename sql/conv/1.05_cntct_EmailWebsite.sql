@@ -1,4 +1,4 @@
-USE JoelBieberSA_Needles
+USE BaldanteSA
 GO
 /*
 alter table [sma_MST_EmailWebsite] disable trigger all
@@ -30,10 +30,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.cinnContactCtg		as cewnContactCtgID
-	,C.cinnContactID		as cewnContactID
+	i.cinnContactCtg		as cewnContactCtgID
+	,i.cinnContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.email				as cewsEmailWebSite
+	,left(c.[Email address - Home],255)				as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -41,10 +41,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,1						as saga -- indicate email
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_IndvContacts] C
-	on C.saga = N.names_id
-WHERE isnull(email,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_IndvContacts] i
+	on i.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Home],'') <> ''
 
 
 -- Work Email
@@ -63,10 +63,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.cinnContactCtg		as cewnContactCtgID
-	,C.cinnContactID		as cewnContactID
+	i.cinnContactCtg		as cewnContactCtgID
+	,i.cinnContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.email_work			as cewsEmailWebSite
+	,c.[Email address - Work]			as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -74,10 +74,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,2						as saga -- indicate email_work
- FROM [JoelBieberNeedles].[dbo].[names] N
- JOIN [sma_MST_IndvContacts] C
- 	on C.saga = N.names_id
- WHERE isnull(email_work,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_IndvContacts] i
+	on i.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Work],'') <> ''
 
 
 -- Other Email
@@ -96,10 +96,10 @@ SELECT
 	,[saga]
 )
  SELECT 
-	C.cinnContactCtg		as cewnContactCtgID
-	,C.cinnContactID		as cewnContactID
+	i.cinnContactCtg		as cewnContactCtgID
+	,i.cinnContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.other_email			as cewsEmailWebSite
+	,c.[Email address - Other]			as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -107,10 +107,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,3						as saga -- indicate other_email
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_IndvContacts] C
-	on C.saga = N.names_id
-WHERE isnull(other_email,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_IndvContacts] i
+	on i.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Other],'') <> ''
 
 
 -- Website
@@ -129,10 +129,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.cinnContactCtg		as cewnContactCtgID
-	,C.cinnContactID		as cewnContactID
+	i.cinnContactCtg		as cewnContactCtgID
+	,i.cinnContactID		as cewnContactID
 	,'W'					as cewsEmailWebsiteFlag
-	,N.website				as cewsEmailWebSite
+	,c.[Web address - Personal]				as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -140,10 +140,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,4						as saga -- indicate website
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_IndvContacts] C
-	on C.saga = N.names_id
-WHERE isnull(website,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_IndvContacts] i
+	on i.saga = c.[Highrise ID]
+WHERE isnull(c.[Web address - Personal],'') <> ''
 
 --------------------------------------------------------------------
 ----- (2/3) CONSTRUCT SMA_MST_EMAILWEBSITE FOR ORGANIZATION ------
@@ -165,10 +165,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.connContactCtg		as cewnContactCtgID
-	,C.connContactID		as cewnContactID
+	o.connContactCtg		as cewnContactCtgID
+	,o.connContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.email				as cewsEmailWebSite
+	,c.[Email address - Home]				as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -176,10 +176,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,1						as saga -- indicate email
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_OrgContacts] C
-	on C.saga = N.names_id
-WHERE isnull(email,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_OrgContacts] o
+	on o.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Home],'') <> ''
 
 -- Work Email
 INSERT INTO [sma_MST_EmailWebsite]
@@ -197,10 +197,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.connContactCtg		as cewnContactCtgID
-	,C.connContactID		as cewnContactID
+	o.connContactCtg		as cewnContactCtgID
+	,o.connContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.email_work			as cewsEmailWebSite
+	,c.[Email address - Work]			as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -208,10 +208,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,2						as saga -- indicate email_work
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_OrgContacts] C
-	on C.saga = N.names_id
-WHERE isnull(email_work,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_OrgContacts] o
+	on o.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Work],'') <> ''
 
 -- Other Email
 INSERT INTO [sma_MST_EmailWebsite]
@@ -229,10 +229,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.connContactCtg		as cewnContactCtgID
-	,C.connContactID		as cewnContactID
+	o.connContactCtg		as cewnContactCtgID
+	,o.connContactID		as cewnContactID
 	,'E'					as cewsEmailWebsiteFlag
-	,N.other_email			as cewsEmailWebSite
+	,c.[Email address - Other]		as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -240,10 +240,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,3						as saga -- indicate other_email
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_OrgContacts] C
-	on C.saga = N.names_id
-WHERE isnull(other_email,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_OrgContacts] o
+	on o.saga = c.[Highrise ID]
+WHERE isnull(c.[Email address - Other],'') <> ''
 
 -- Website
 INSERT INTO [sma_MST_EmailWebsite]
@@ -261,10 +261,10 @@ INSERT INTO [sma_MST_EmailWebsite]
 	,[saga]
 )
 SELECT 
-	C.connContactCtg		as cewnContactCtgID
-	,C.connContactID		as cewnContactID
+	o.connContactCtg		as cewnContactCtgID
+	,o.connContactID		as cewnContactID
 	,'W'					as cewsEmailWebsiteFlag
-	,N.website				as cewsEmailWebSite
+	,c.[Web address - Work]			as cewsEmailWebSite
 	,null					as cewbDefault
 	,368					as cewnRecUserID
 	,getdate()				as cewdDtCreated
@@ -272,10 +272,10 @@ SELECT
 	,getdate()				as cewdDtModified
 	,null					as cewnLevelNo
 	,4						as saga -- indicate website
-FROM [JoelBieberNeedles].[dbo].[names] N
-JOIN [sma_MST_OrgContacts] C
-	on C.saga = N.names_id
-WHERE isnull(website,'') <> ''
+from Baldante..contacts_csv c
+JOIN [sma_MST_OrgContacts] o
+	on o.saga = c.[Highrise ID]
+WHERE isnull(c.[Web address - Work],'') <> ''
 
  ---
  ALTER TABLE [sma_MST_EmailWebsite] ENABLE TRIGGER ALL

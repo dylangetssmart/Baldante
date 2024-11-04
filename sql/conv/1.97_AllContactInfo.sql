@@ -1,4 +1,4 @@
-USE JoelBieberSA_Needles
+USE BaldanteSA
 
 drop table [sma_MST_AllContactInfo]
 GO
