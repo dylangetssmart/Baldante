@@ -55,9 +55,9 @@ END
 
 --(0) saga field for needles names_id ---
 ALTER TABLE [sma_MST_IndvContacts]
-ALTER COLUMN saga INT
+ALTER COLUMN saga varchar(100)
 ALTER TABLE [sma_MST_OrgContacts]
-ALTER COLUMN saga INT
+ALTER COLUMN saga varchar(100)
 
 
 ---------------------------
@@ -173,7 +173,7 @@ INSERT INTO [sma_MST_IndvContacts]
 	   ,NULL											AS [cinsPrimaryLanguage]
 	   ,NULL											AS [cinsOtherLanguage]
 	   ,NULL											AS [cinnrace]
-	   ,c.[Highrise ID]									AS saga
+	   ,convert(varchar,c.[Highrise ID])									AS saga
 	   ,'HR'										AS [saga_db]
 	   ,'contacts_csv'										AS [saga_ref]
 	FROM Baldante..contacts_csv c
@@ -209,7 +209,7 @@ SELECT
     ,368											as [connRecUserID]
     ,getdate()									as [condDtCreated]
     ,1											as [conbStatus]	-- Hardcode Status as ACTIVE
-    ,c.[Highrise ID]								as [saga]	-- remember the [names].[names_id] number
+    ,convert(varchar,c.[Highrise ID])								as [saga]	-- remember the [names].[names_id] number
 	,'HR' AS [saga_db]
 	,'contacts_csv' AS [saga_ref]	
 FROM Baldante..contacts_csv c

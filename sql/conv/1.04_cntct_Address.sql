@@ -475,7 +475,7 @@ INSERT INTO [sma_MST_Address]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_Orgcontacts] O
-		ON o.saga = c.[Highrise ID]
+		ON o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_AddressTypes] T
 		ON T.addnContactCategoryID = O.connContactCtg
 			AND T.addsCode = 'WORK'
@@ -564,7 +564,7 @@ INSERT INTO [sma_MST_Address]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_Orgcontacts] O
-		ON o.saga = c.[Highrise ID]
+		ON o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_AddressTypes] T
 		ON T.addnContactCategoryID = O.connContactCtg
 			AND T.addsCode = 'BR'

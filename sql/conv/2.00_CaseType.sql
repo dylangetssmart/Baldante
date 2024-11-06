@@ -17,23 +17,32 @@ Notes:
 	- For example, you cannot ALTER a table to add a column, then select that column in the same batch - because while compiling the execution plan, that column does not exist for selecting.
 */
 
-use BaldanteSA
+USE BaldanteSA
 GO
 
 -- Create a temporary table to store variable values
 DROP TABLE IF EXISTS #TempVariables;
 
 CREATE TABLE #TempVariables (
-    OfficeName NVARCHAR(255),
-    StateName NVARCHAR(100),
-    PhoneNumber NVARCHAR(50),
-    CaseGroup NVARCHAR(100),
-    VenderCaseType NVARCHAR(25)
+	OfficeName NVARCHAR(255)
+   ,StateName NVARCHAR(100)
+   ,PhoneNumber NVARCHAR(50)
+   ,CaseGroup NVARCHAR(100)
+   ,VenderCaseType NVARCHAR(25)
 );
 
 -- Insert values into the temporary table
-INSERT INTO #TempVariables (OfficeName, StateName, PhoneNumber, CaseGroup, VenderCaseType)
-VALUES ('Baldante & Rubenstein', 'Pennsylvania', '2157351616', 'Highrise', 'BaldanteCaseType');
+INSERT INTO #TempVariables
+	(
+	OfficeName
+   ,StateName
+   ,PhoneNumber
+   ,CaseGroup
+   ,VenderCaseType
+	)
+VALUES (
+'Baldante & Rubenstein', 'Pennsylvania', '2157351616', 'Highrise', 'BaldanteCaseType'
+);
 
 
 -- (0.1) sma_MST_CaseGroup -----------------------------------------------------
@@ -80,52 +89,63 @@ VALUES ('Baldante & Rubenstein', 'Pennsylvania', '2157351616', 'Highrise', 'Bald
 
 -- (0.2) sma_MST_Offices -----------------------------------------------------
 -- Create an office for conversion client
-IF NOT EXISTS
-(
-	select *
-	from [sma_mst_offices]
-	where office_name = (SELECT OfficeName FROM #TempVariables)
-)
+IF NOT EXISTS (
+		SELECT
+			*
+		FROM [sma_mst_offices]
+		WHERE office_name = (
+				SELECT
+					OfficeName
+				FROM #TempVariables
+			)
+	)
 BEGIN
 	INSERT INTO [sma_mst_offices]
-	(
+		(
 		[office_status]
-		,[office_name]
-		,[state_id]
-		,[is_default]
-		,[date_created]
-		,[user_created]
-		,[date_modified]
-		,[user_modified]
-		,[Letterhead]
-		,[UniqueContactId]
-		,[PhoneNumber]
-	)
-	SELECT 
-		1			    			as [office_status]
-		,(
-			SELECT OfficeName
-			FROM #TempVariables
-		)					 		as [office_name]
-		,(
-			select sttnStateID
-			from sma_MST_States
-			where sttsDescription = (
-									SELECT StateName
-									FROM #TempVariables
-									)
-		)							as [state_id]
-		,1			    			as [is_default]
-		,getdate()	    			as [date_created]
-		,'rdoshi'					as [user_created]
-		,getdate()	    			as [date_modified]
-		,'dbo'		    			as [user_modified]
-		,'LetterheadUt.docx' 		as [Letterhead]
-		,NULL						as [UniqueContactId]
-		,(
-			SELECT PhoneNumber
-			FROM #TempVariables
-		)				    		as [PhoneNumber]
+	   ,[office_name]
+	   ,[state_id]
+	   ,[is_default]
+	   ,[date_created]
+	   ,[user_created]
+	   ,[date_modified]
+	   ,[user_modified]
+	   ,[Letterhead]
+	   ,[UniqueContactId]
+	   ,[PhoneNumber]
+		)
+		SELECT
+			1					AS [office_status]
+		   ,(
+				SELECT
+					OfficeName
+				FROM #TempVariables
+			)					
+			AS [office_name]
+		   ,(
+				SELECT
+					sttnStateID
+				FROM sma_MST_States
+				WHERE sttsDescription = (
+						SELECT
+							StateName
+						FROM #TempVariables
+					)
+			)					
+			AS [state_id]
+		   ,1					AS [is_default]
+		   ,GETDATE()			AS [date_created]
+		   ,'rdoshi'			AS [user_created]
+		   ,GETDATE()			AS [date_modified]
+		   ,'dbo'				AS [user_modified]
+		   ,'LetterheadUt.docx' AS [Letterhead]
+		   ,NULL				AS [UniqueContactId]
+		   ,(
+				SELECT
+					PhoneNumber
+				FROM #TempVariables
+			)					
+			AS [PhoneNumber]
 END
 GO
 
@@ -133,16 +153,16 @@ GO
 -- (1) sma_MST_CaseType -----------------------------------------------------
 -- (1.1) - Add a case type field that acts as conversion flag
 -- for future reference: "VenderCaseType"
-IF NOT EXISTS
-(
-	SELECT *
-	FROM sys.columns
-	WHERE Name = N'VenderCaseType'
-	AND Object_ID = Object_ID(N'sma_MST_CaseType')
-)
+IF NOT EXISTS (
+		SELECT
+			*
+		FROM sys.columns
+		WHERE Name = N'VenderCaseType'
+			AND object_id = OBJECT_ID(N'sma_MST_CaseType')
+	)
 BEGIN
 	ALTER TABLE sma_MST_CaseType
-	ADD VenderCaseType varchar(100)
+	ADD VenderCaseType VARCHAR(100)
 END
 GO
 
@@ -170,47 +190,70 @@ INSERT INTO [sma_MST_CaseType]
    ,[cstsIncidentLabel1]
    ,[VenderCaseType]
 	)
-VALUES (
-NULL,  -- cstsCode
-'Highrise',  -- cstsType
-NULL,  -- cstsSubType
-NULL,  -- cstnWorkflowTemplateID
-720,  -- cstnExpectedResolutionDays (Hardcode 2 years)
-368,  -- cstnRecUserID
-GETDATE(),  -- cstdDtCreated
-368,  -- cstnModifyUserID
-GETDATE(),  -- cstdDtModified
-0,  -- cstnLevelNo
-NULL,  -- cstbTimeTracking
-	(  -- Subquery for cstnGroupID
-		SELECT
-			cgpnCaseGroupID
-		FROM sma_MST_caseGroup
-		WHERE cgpsDscrptn = 'General Negligence'
-	),
-NULL,  -- cstnGovtMunType
-NULL,  -- cstnIsMassTort
-	(  -- Subquery for cstnStatusID
-		SELECT
-			cssnStatusID
-		FROM [sma_MST_CaseStatus]
-		WHERE csssDescription = 'Presign - Not Scheduled For Sign Up'
-	),
-	(  -- Subquery for cstnStatusTypeID
-		SELECT
-			stpnStatusTypeID
-		FROM [sma_MST_CaseStatusType]
-		WHERE stpsStatusType = 'Status'
-	),
-1,  -- cstbActive
-1,  -- cstbUseIncident1
-'Incident 1',  -- cstsIncidentLabel1
-	(  -- Subquery for VenderCaseType
-		SELECT
-			VenderCaseType
-		FROM #TempVariables
-	)
-)
+	SELECT
+		NULL
+	   ,  -- cstsCode
+		'Highrise'
+	   ,  -- cstsType
+		NULL
+	   ,  -- cstsSubType
+		NULL
+	   ,  -- cstnWorkflowTemplateID
+		720
+	   ,  -- cstnExpectedResolutionDays (Hardcode 2 years)
+		368
+	   ,  -- cstnRecUserID
+		GETDATE()
+	   ,  -- cstdDtCreated
+		368
+	   ,  -- cstnModifyUserID
+		GETDATE()
+	   ,  -- cstdDtModified
+		0
+	   ,  -- cstnLevelNo
+		NULL
+	   ,  -- cstbTimeTracking
+		(  -- Subquery for cstnGroupID
+			SELECT
+				cgpnCaseGroupID
+			FROM sma_MST_caseGroup
+			WHERE cgpsDscrptn = 'General Negligence'
+		)
+	   ,NULL
+	   ,  -- cstnGovtMunType
+		NULL
+	   ,  -- cstnIsMassTort
+		(  -- Subquery for cstnStatusID
+			SELECT
+				cssnStatusID
+			FROM [sma_MST_CaseStatus]
+			WHERE csssDescription = 'Presign - Not Scheduled For Sign Up'
+		)
+	   ,(  -- Subquery for cstnStatusTypeID
+			SELECT
+				stpnStatusTypeID
+			FROM [sma_MST_CaseStatusType]
+			WHERE stpsStatusType = 'Status'
+		)
+	   ,1
+	   ,  -- cstbActive
+		1
+	   ,  -- cstbUseIncident1
+		'Incident 1'
+	   ,  -- cstsIncidentLabel1
+		(  -- Subquery for VenderCaseType
+			SELECT
+				VenderCaseType
+			FROM #TempVariables
+		)
+	WHERE NOT EXISTS (
+			SELECT
+				1
+			FROM [sma_MST_CaseType] CST
+			WHERE CST.cstsType = 'Highrise'
+		);
+
+
 --FROM [CaseTypeMixture] MIX 
 --LEFT JOIN [sma_MST_CaseType] ct
 --	on ct.cststype = mix.[SmartAdvocate Case Type]
@@ -225,7 +268,7 @@ GO
 --	on ct.cststype = mix.[SmartAdvocate Case Type]
 --WHERE isnull(VenderCaseType,'') = ''
 --GO
-	
+
 -- (2) sma_MST_CaseSubType -----------------------------------------------------
 -- (2.1) - sma_MST_CaseSubTypeCode
 -- For non-null values of SA Case Sub Type from CaseTypeMixture,
@@ -343,7 +386,7 @@ INSERT INTO [sma_MST_SubRole]
 	SELECT
 		'P'				   AS [sbrsCode]
 	   ,4				   AS [sbrnRoleID]
-	   ,'(P)-Plaintiff'		   AS [sbrsDscrptn]
+	   ,'(P)-Plaintiff'	   AS [sbrsDscrptn]
 	   ,CST.cstnCaseTypeID AS [sbrnCaseTypeID]
 	   ,NULL			   AS [sbrnPriority]
 	   ,368				   AS [sbrnRecUserID]
@@ -361,7 +404,14 @@ INSERT INTO [sma_MST_SubRole]
 		)				   
 		AS [sbrnTypeCode]
 	FROM [sma_MST_CaseType] CST
-	WHERE CST.cstsType = 'Highrise';
+	WHERE CST.cstsType = 'Highrise'
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM [sma_MST_SubRole] SR
+			WHERE SR.sbrsCode = 'P'
+				AND SR.sbrnCaseTypeID = CST.cstnCaseTypeID
+		);
 
 -- Insert Defendant SubRole
 INSERT INTO [sma_MST_SubRole]
@@ -383,7 +433,7 @@ INSERT INTO [sma_MST_SubRole]
 	SELECT
 		'D'				   AS [sbrsCode]
 	   ,5				   AS [sbrnRoleID]
-	   ,'(D)-Defendant'		   AS [sbrsDscrptn]
+	   ,'(D)-Defendant'	   AS [sbrsDscrptn]
 	   ,CST.cstnCaseTypeID AS [sbrnCaseTypeID]
 	   ,NULL			   AS [sbrnPriority]
 	   ,368				   AS [sbrnRecUserID]
@@ -401,7 +451,14 @@ INSERT INTO [sma_MST_SubRole]
 		)				   
 		AS [sbrnTypeCode]
 	FROM [sma_MST_CaseType] CST
-	WHERE CST.cstsType = 'Highrise';
+	WHERE CST.cstsType = 'Highrise'
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM [sma_MST_SubRole] SR
+			WHERE SR.sbrsCode = 'D'
+				AND SR.sbrnCaseTypeID = CST.cstnCaseTypeID
+		);
 GO
 
 -- (3.0) sma_MST_SubRole -----------------------------------------------------
@@ -547,185 +604,202 @@ ORDER BY CST.cstnCaseTypeID
 ALTER TABLE [sma_TRN_Cases] DISABLE TRIGGER ALL
 GO
 
+ALTER TABLE sma_TRN_Cases
+ALTER COLUMN [saga] INT
+GO
+
+IF NOT EXISTS (
+		SELECT
+			*
+		FROM sys.columns
+		WHERE Name = N'saga_db'
+			AND Object_ID = OBJECT_ID(N'sma_trn_Cases')
+	)
+BEGIN
+	ALTER TABLE sma_trn_Cases ADD [saga_db] VARCHAR(5);
+END
+GO
+
 INSERT INTO [sma_TRN_Cases]
-( 
-  [cassCaseNumber]
-  ,[casbAppName]
-  ,[cassCaseName]
-  ,[casnCaseTypeID]
-  ,[casnState]
-  ,[casdStatusFromDt]
-  ,[casnStatusValueID]
-  ,[casdsubstatusfromdt]
-  ,[casnSubStatusValueID]
-  ,[casdOpeningDate]
-  ,[casdClosingDate]
-  ,[casnCaseValueID]
-  ,[casnCaseValueFrom]
-  ,[casnCaseValueTo]
-  ,[casnCurrentCourt]
-  ,[casnCurrentJudge]
-  ,[casnCurrentMagistrate]
-  ,[casnCaptionID]
-  ,[cassCaptionText]
-  ,[casbMainCase]
-  ,[casbCaseOut]
-  ,[casbSubOut]
-  ,[casbWCOut]
-  ,[casbPartialOut]
-  ,[casbPartialSubOut]
-  ,[casbPartiallySettled]
-  ,[casbInHouse]
-  ,[casbAutoTimer]
-  ,[casdExpResolutionDate]
-  ,[casdIncidentDate]
-  ,[casnTotalLiability]
-  ,[cassSharingCodeID]
-  ,[casnStateID]
-  ,[casnLastModifiedBy]
-  ,[casdLastModifiedDate]
-  ,[casnRecUserID]
-  ,[casdDtCreated]
-  ,[casnModifyUserID]
-  ,[casdDtModified]
-  ,[casnLevelNo]
-  ,[cassCaseValueComments]
-  ,[casbRefIn]
-  ,[casbDelete]
-  ,[casbIntaken]
-  ,[casnOrgCaseTypeID]
-  ,[CassCaption]
-  ,[cassMdl]
-  ,[office_id]
-  ,[saga]
-  ,[LIP]
-  ,[casnSeriousInj]
-  ,[casnCorpDefn]
-  ,[casnWebImporter]
-  ,[casnRecoveryClient]
-  ,[cas]
-  ,[ngage]
-  ,[casnClientRecoveredDt]
-  ,[CloseReason]
-)
-SELECT 
-    C.casenum						as cassCaseNumber
-    ,'' 							as casbAppName
-    ,case_title						as cassCaseName
-	,(
-		select cstnCaseSubTypeID
-		from [sma_MST_CaseSubType] ST
-		where ST.cstnGroupID = CST.cstnCaseTypeID
-		and ST.cstsDscrptn = MIX.[SmartAdvocate Case Sub Type]
-	)								as casnCaseTypeID
-    ,(
-		select [sttnStateID]
-		from [sma_MST_States]
-		where [sttsDescription] = (
-									SELECT StateName
-									FROM #TempVariables
-								)
-	)								as casnState
-    ,GETDATE()						as casdStatusFromDt
-    ,(
-		select cssnStatusID 
-		FROM [sma_MST_CaseStatus]
-		where csssDescription = 'Presign - Not Scheduled For Sign Up'
-	)								as casnStatusValueID
-    ,GETDATE()						as casdsubstatusfromdt
-    ,(
-		select cssnStatusID
-		FROM [sma_MST_CaseStatus]
-		where csssDescription = 'Presign - Not Scheduled For Sign Up'
-	)								as casnSubStatusValueID
-    ,case
-		when (C.date_opened not between '1900-01-01' and '2079-12-31')
-			then getdate() 
-		else C.date_opened
-		end							as casdOpeningDate
-    ,case
-		when (C.close_date not between '1900-01-01' and '2079-12-31')
-			then getdate()
-		else C.close_date
-		end							as casdClosingDate
-	,null							as [casnCaseValueID]
-	,null							as [casnCaseValueFrom]
-	,null							as [casnCaseValueTo]
-	,null							as [casnCurrentCourt]
-	,null							as [casnCurrentJudge]
-	,null							as [casnCurrentMagistrate]
-	,0								as [casnCaptionID]
-	,case_title						as cassCaptionText
-	,1 								as [casbMainCase]
-	,0 								as [casbCaseOut]
-	,0 								as [casbSubOut]
-	,0 								as [casbWCOut]
-	,0 								as [casbPartialOut]
-	,0 								as [casbPartialSubOut]
-	,0 								as [casbPartiallySettled]
-	,1 								as [casbInHouse]
-	,null							as [casbAutoTimer]
-	,null							as [casdExpResolutionDate]
-	,null							as [casdIncidentDate]
-	,0 								as [casnTotalLiability]
-	,0 								as [cassSharingCodeID]
-    ,(
-		select [sttnStateID]
-		from [sma_MST_States]
-		where [sttsDescription] = (
-									SELECT StateName
-									FROM #TempVariables
-								)
-	)								as [casnStateID]
-    ,null 							as [casnLastModifiedBy]
-	,null 							as [casdLastModifiedDate]
-    ,(
-		select usrnUserID
-		from sma_MST_Users
-		where saga = C.intake_staff
-	)								as casnRecUserID
-    ,case
-		when C.intake_date between '1900-01-01' and '2079-06-06' and C.intake_time between '1900-01-01' and '2079-06-06' 
-			THEN (select cast(convert(date,C.intake_date) as datetime) + cast(convert(time,C.intake_time) as datetime))
-		else null 
-		end							as casdDtCreated
-    ,null 							as casnModifyUserID
-	,null 							as casdDtModified
-	,'' 							as casnLevelNo
-	,'' 							as cassCaseValueComments
-	,null 							as casbRefIn
-	,null 							as casbDelete
-	,null 							as casbIntaken
-    ,cstnCaseTypeID					as casnOrgCaseTypeID -- actual case type
-    ,''								as CassCaption
-    ,0								as cassMdl
-    ,(
-		select office_id
-		from sma_MST_Offices
-		where office_name = (
-								SELECT OfficeName
-								FROM #TempVariables
-							)
-	)								as office_id
-    ,''								as [saga]
-	,null 							as [LIP]
-	,null 							as [casnSeriousInj]
-	,null 							as [casnCorpDefn]
-	,null 							as [casnWebImporter]
-	,null 							as [casnRecoveryClient]
-	,null 							as [cas]
-	,null 							as [ngage]
-	,null 							as [casnClientRecoveredDt]
-    ,0								as CloseReason
-FROM [JoelBieberNeedles].[dbo].[cases_Indexed] C
-LEFT JOIN [JoelBieberNeedles].[dbo].[user_case_data] U
-	on U.casenum = C.casenum
-JOIN caseTypeMixture mix
-	on mix.matcode = c.matcode
-LEFT JOIN sma_MST_CaseType CST
-	on CST.cststype = mix.[smartadvocate Case Type]
-	and VenderCaseType = (SELECT VenderCaseType FROM #TempVariables)
-ORDER BY C.casenum
+	(
+	[cassCaseNumber]
+   ,[casbAppName]
+   ,[cassCaseName]
+   ,[casnCaseTypeID]
+   ,[casnState]
+   ,[casdStatusFromDt]
+   ,[casnStatusValueID]
+   ,[casdsubstatusfromdt]
+   ,[casnSubStatusValueID]
+   ,[casdOpeningDate]
+   ,[casdClosingDate]
+   ,[casnCaseValueID]
+   ,[casnCaseValueFrom]
+   ,[casnCaseValueTo]
+   ,[casnCurrentCourt]
+   ,[casnCurrentJudge]
+   ,[casnCurrentMagistrate]
+   ,[casnCaptionID]
+   ,[cassCaptionText]
+   ,[casbMainCase]
+   ,[casbCaseOut]
+   ,[casbSubOut]
+   ,[casbWCOut]
+   ,[casbPartialOut]
+   ,[casbPartialSubOut]
+   ,[casbPartiallySettled]
+   ,[casbInHouse]
+   ,[casbAutoTimer]
+   ,[casdExpResolutionDate]
+   ,[casdIncidentDate]
+   ,[casnTotalLiability]
+   ,[cassSharingCodeID]
+   ,[casnStateID]
+   ,[casnLastModifiedBy]
+   ,[casdLastModifiedDate]
+   ,[casnRecUserID]
+   ,[casdDtCreated]
+   ,[casnModifyUserID]
+   ,[casdDtModified]
+   ,[casnLevelNo]
+   ,[cassCaseValueComments]
+   ,[casbRefIn]
+   ,[casbDelete]
+   ,[casbIntaken]
+   ,[casnOrgCaseTypeID]
+   ,[CassCaption]
+   ,[cassMdl]
+   ,[office_id]
+   ,[saga]
+   ,[LIP]
+   ,[casnSeriousInj]
+   ,[casnCorpDefn]
+   ,[casnWebImporter]
+   ,[casnRecoveryClient]
+   ,[cas]
+   ,[ngage]
+   ,[casnClientRecoveredDt]
+   ,[CloseReason]
+   ,[saga_db]
+	)
+	SELECT
+		c.ID	  AS cassCaseNumber
+	   ,''		  AS casbAppName
+	   ,c.Name	  AS cassCaseName
+	   ,NULL	  AS casnCaseTypeID
+	   ,(
+			SELECT
+				[sttnStateID]
+			FROM [sma_MST_States]
+			WHERE [sttsDescription] = (
+					SELECT
+						StateName
+					FROM #TempVariables
+				)
+		)		  
+		AS casnState
+	   ,GETDATE() AS casdStatusFromDt
+	   ,(
+			SELECT
+				cssnStatusID
+			FROM [sma_MST_CaseStatus]
+			WHERE csssDescription = 'Presign - Not Scheduled For Sign Up'
+		)		  
+		AS casnStatusValueID
+	   ,GETDATE() AS casdsubstatusfromdt
+	   ,(
+			SELECT
+				cssnStatusID
+			FROM [sma_MST_CaseStatus]
+			WHERE csssDescription = 'Presign - Not Scheduled For Sign Up'
+		)		  
+		AS casnSubStatusValueID
+	   ,GETDATE() AS casdOpeningDate
+	   ,NULL	  AS casdClosingDate
+	   ,NULL	  AS [casnCaseValueID]
+	   ,NULL	  AS [casnCaseValueFrom]
+	   ,NULL	  AS [casnCaseValueTo]
+	   ,NULL	  AS [casnCurrentCourt]
+	   ,NULL	  AS [casnCurrentJudge]
+	   ,NULL	  AS [casnCurrentMagistrate]
+	   ,0		  AS [casnCaptionID]
+	   ,''		  AS cassCaptionText
+	   ,1		  AS [casbMainCase]
+	   ,0		  AS [casbCaseOut]
+	   ,0		  AS [casbSubOut]
+	   ,0		  AS [casbWCOut]
+	   ,0		  AS [casbPartialOut]
+	   ,0		  AS [casbPartialSubOut]
+	   ,0		  AS [casbPartiallySettled]
+	   ,1		  AS [casbInHouse]
+	   ,NULL	  AS [casbAutoTimer]
+	   ,NULL	  AS [casdExpResolutionDate]
+	   ,NULL	  AS [casdIncidentDate]
+	   ,0		  AS [casnTotalLiability]
+	   ,0		  AS [cassSharingCodeID]
+	   ,(
+			SELECT
+				[sttnStateID]
+			FROM [sma_MST_States]
+			WHERE [sttsDescription] = (
+					SELECT
+						StateName
+					FROM #TempVariables
+				)
+		)		  
+		AS [casnStateID]
+	   ,NULL	  AS [casnLastModifiedBy]
+	   ,NULL	  AS [casdLastModifiedDate]
+	   ,368		  AS casnRecUserID
+	   ,GETDATE() AS casdDtCreated
+	   ,NULL	  AS casnModifyUserID
+	   ,NULL	  AS casdDtModified
+	   ,''		  AS casnLevelNo
+	   ,''		  AS cassCaseValueComments
+	   ,NULL	  AS casbRefIn
+	   ,NULL	  AS casbDelete
+	   ,NULL	  AS casbIntaken
+	   ,(
+			SELECT
+				smct.cstnCaseTypeID
+			FROM sma_MST_CaseType smct
+			WHERE smct.cstsType = 'Highrise'
+		)		  
+		AS casnOrgCaseTypeID -- case type
+	   ,''		  AS CassCaption
+	   ,0		  AS cassMdl
+	   ,(
+			SELECT
+				office_id
+			FROM sma_MST_Offices
+			WHERE office_name = (
+					SELECT
+						OfficeName
+					FROM #TempVariables
+				)
+		)		  
+		AS office_id
+	   ,c.ID	  AS [saga]
+	   ,NULL	  AS [LIP]
+	   ,NULL	  AS [casnSeriousInj]
+	   ,NULL	  AS [casnCorpDefn]
+	   ,NULL	  AS [casnWebImporter]
+	   ,NULL	  AS [casnRecoveryClient]
+	   ,NULL	  AS [cas]
+	   ,NULL	  AS [ngage]
+	   ,NULL	  AS [casnClientRecoveredDt]
+	   ,0		  AS CloseReason
+	   ,'HR' AS [saga_db]
+	FROM Baldante..contacts c
+--FROM [JoelBieberNeedles].[dbo].[cases_Indexed] C
+--LEFT JOIN [JoelBieberNeedles].[dbo].[user_case_data] U
+--	on U.casenum = C.casenum
+--JOIN caseTypeMixture mix
+--	on mix.matcode = c.matcode
+--LEFT JOIN sma_MST_CaseType CST
+--	on CST.cststype = mix.[smartadvocate Case Type]
+--	and VenderCaseType = (SELECT VenderCaseType FROM #TempVariables)
+--ORDER BY C.casenum
 GO
 
 ---

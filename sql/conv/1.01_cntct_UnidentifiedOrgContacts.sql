@@ -38,7 +38,7 @@ BEGIN
 	   ,[connContactTypeID]
 	   ,[connRecUserID]
 	   ,[condDtCreated]
-	   ,[saga]
+	   --,[saga]
 		)
 		SELECT
 			'Unidentified Medical Provider' AS [consName]
@@ -53,7 +53,7 @@ BEGIN
 			AS [connContactTypeID]
 		   ,368								AS [connRecUserID]
 		   ,GETDATE()						AS [condDtCreated]
-		   ,'unidentifiedHospital'			AS [saga]
+		   --,'unidentifiedHospital'			AS [saga]
 END
 GO
 
@@ -74,7 +74,7 @@ BEGIN
 	   ,[connContactTypeID]
 	   ,[connRecUserID]
 	   ,[condDtCreated]
-	   ,[saga]
+	   --,[saga]
 		)
 		SELECT
 			'Unidentified Insurance' AS [consName]
@@ -89,7 +89,7 @@ BEGIN
 			AS [connContactTypeID]
 		   ,368						 AS [connRecUserID]
 		   ,GETDATE()				 AS [condDtCreated]
-		   ,'unidentifiedInsurance'	 AS [saga]
+		   --,'unidentifiedInsurance'	 AS [saga]
 END
 GO
 
@@ -110,7 +110,7 @@ BEGIN
 	   ,[connContactTypeID]
 	   ,[connRecUserID]
 	   ,[condDtCreated]
-	   ,[saga]
+	   --,[saga]
 		)
 		SELECT
 			'Unidentified Court' AS [consName]
@@ -125,7 +125,7 @@ BEGIN
 			AS [connContactTypeID]
 		   ,368					 AS [connRecUserID]
 		   ,GETDATE()			 AS [condDtCreated]
-		   ,'unidentifiedCourt'	 AS [saga]
+		   --,'unidentifiedCourt'	 AS [saga]
 END
 GO
 
@@ -147,7 +147,7 @@ BEGIN
 	   ,[connContactTypeID]
 	   ,[connRecUserID]
 	   ,[condDtCreated]
-	   ,[saga]
+	   --,[saga]
 		)
 		SELECT
 			'Unidentified Lienor' AS [consName]
@@ -162,7 +162,7 @@ BEGIN
 			AS [connContactTypeID]
 		   ,368					 AS [connRecUserID]
 		   ,GETDATE()			 AS [condDtCreated]
-		   ,'unidentifiedLienor'	 AS [saga]
+		   --,'unidentifiedLienor'	 AS [saga]
 END
 GO
 
@@ -184,7 +184,7 @@ BEGIN
 	   ,[connContactTypeID]
 	   ,[connRecUserID]
 	   ,[condDtCreated]
-	   ,[saga]
+	   --,[saga]
 		)
 		SELECT
 			'Unidentified School' AS [consName]
@@ -199,6 +199,6 @@ BEGIN
 			AS [connContactTypeID]
 		   ,368					 AS [connRecUserID]
 		   ,GETDATE()			 AS [condDtCreated]
-		   ,'unidentifiedSchool'	 AS [saga]
+		   --,'unidentifiedSchool'	 AS [saga]
 END
 GO

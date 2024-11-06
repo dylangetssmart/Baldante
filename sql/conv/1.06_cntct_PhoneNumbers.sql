@@ -116,7 +116,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL											   AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_IndvContacts] i
-		ON i.saga = c.[Highrise ID]
+		on i.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = i.cinnContactID
 			AND A.addnContactCtgID = i.cinnContactCtg
@@ -168,7 +168,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL											   AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_IndvContacts] i
-		ON i.saga = c.[Highrise ID]
+		on i.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = i.cinnContactID
 			AND A.addnContactCtgID = i.cinnContactCtg
@@ -220,7 +220,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL												 AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_IndvContacts] i
-		ON i.saga = c.[Highrise ID]
+		on i.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = i.cinnContactID
 			AND A.addnContactCtgID = i.cinnContactCtg
@@ -273,7 +273,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL											  AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_IndvContacts] i
-		ON i.saga = c.[Highrise ID]
+		on i.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = i.cinnContactID
 			AND A.addnContactCtgID = i.cinnContactCtg
@@ -326,7 +326,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL												AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_IndvContacts] i
-		ON i.saga = c.[Highrise ID]
+		on i.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = i.cinnContactID
 			AND A.addnContactCtgID = i.cinnContactCtg
@@ -382,7 +382,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL											   AS caseNo
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_OrgContacts] o
-		ON o.saga = c.[Highrise ID]
+		on o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = o.connContactID
 			AND A.addnContactCtgID = o.connContactCtg
@@ -435,7 +435,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_OrgContacts] o
-		ON o.saga = c.[Highrise ID]
+		on o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = o.connContactID
 			AND A.addnContactCtgID = o.connContactCtg
@@ -488,7 +488,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_OrgContacts] o
-		ON o.saga = c.[Highrise ID]
+		on o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = o.connContactID
 			AND A.addnContactCtgID = o.connContactCtg
@@ -541,7 +541,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_OrgContacts] o
-		ON o.saga = c.[Highrise ID]
+		on o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = o.connContactID
 			AND A.addnContactCtgID = o.connContactCtg
@@ -593,7 +593,7 @@ INSERT INTO [sma_MST_ContactNumbers]
 	   ,NULL
 	FROM Baldante..contacts_csv c
 	JOIN [sma_MST_OrgContacts] o
-		ON o.saga = c.[Highrise ID]
+		on o.saga = convert(varchar,c.[Highrise ID])
 	JOIN [sma_MST_Address] A
 		ON A.addnContactID = o.connContactID
 			AND A.addnContactCtgID = o.connContactCtg

@@ -178,7 +178,7 @@ SELECT
 	,1						as saga -- indicate email
 from Baldante..contacts_csv c
 JOIN [sma_MST_OrgContacts] o
-	on o.saga = c.[Highrise ID]
+	on o.saga = convert(varchar,c.[Highrise ID])
 WHERE isnull(c.[Email address - Home],'') <> ''
 
 -- Work Email
@@ -210,7 +210,7 @@ SELECT
 	,2						as saga -- indicate email_work
 from Baldante..contacts_csv c
 JOIN [sma_MST_OrgContacts] o
-	on o.saga = c.[Highrise ID]
+	on o.saga = convert(varchar,c.[Highrise ID])
 WHERE isnull(c.[Email address - Work],'') <> ''
 
 -- Other Email
@@ -242,7 +242,7 @@ SELECT
 	,3						as saga -- indicate other_email
 from Baldante..contacts_csv c
 JOIN [sma_MST_OrgContacts] o
-	on o.saga = c.[Highrise ID]
+	on o.saga = convert(varchar,c.[Highrise ID])
 WHERE isnull(c.[Email address - Other],'') <> ''
 
 -- Website
@@ -274,7 +274,7 @@ SELECT
 	,4						as saga -- indicate website
 from Baldante..contacts_csv c
 JOIN [sma_MST_OrgContacts] o
-	on o.saga = c.[Highrise ID]
+	on o.saga = convert(varchar,c.[Highrise ID])
 WHERE isnull(c.[Web address - Work],'') <> ''
 
  ---
