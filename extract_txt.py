@@ -15,14 +15,12 @@ def connect_to_sql_server(server, database, username, password):
 def create_tables(engine):
     metadata = MetaData()
 
-    # Define the 'contacts' table
     contacts_table = Table('contacts', metadata,
         Column('ID', Integer, primary_key=True, autoincrement=False),
         Column('Name', String),
         Column('Tags', String)
     )
 
-    # Define the 'phone' table
     phone_table = Table('phone', metadata,
         # Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
@@ -30,7 +28,6 @@ def create_tables(engine):
         Column('phone_number', String)
     )
 
-    # Define the 'phone' table
     email_table = Table('email', metadata,
         # Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
@@ -38,7 +35,6 @@ def create_tables(engine):
         Column('email_address', String)
     )
 
-    # Define the 'phone' table
     address_table = Table('address', metadata,
         # Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
@@ -46,9 +42,8 @@ def create_tables(engine):
         Column('address', String)
     )
 
-    # Define the 'notes' table
     notes_table = Table('notes', metadata,
-        Column('note_id', Integer, primary_key=True),  # Assuming note_id can be a string
+        Column('note_id', Integer, primary_key=True, autoincrement=False),  # Assuming note_id can be a string
         Column('contact_id', Integer),  # Foreign key to 'contacts'
         # Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Foreign key to 'contacts'
         Column('author', String),
@@ -57,51 +52,19 @@ def create_tables(engine):
         Column('body', String)
     )
 
-    # Create both tables in the database (if they don't already exist)
     metadata.create_all(engine)
 
-# Function to insert data into SQL Server using SQLAlchemy
 def insert_to_sql_server(engine, table_name, data):
     # df = pd.DataFrame([data])
     # df.to_sql(table_name, con=engine, if_exists='append', index=False)
 
     try:
-        # Convert the data to a DataFrame
         df = pd.DataFrame([data])
-        # Insert the data into the SQL table
         df.to_sql(table_name, con=engine, if_exists='append', index=False)
         print(f"Data inserted into {table_name}: {data}")
     except Exception as e:
         print(f"Error inserting data into {table_name}: {e}")
 
-    # # Enable IDENTITY_INSERT for the table
-    # with engine.connect() as conn:
-    #     conn.execute(text(f"SET IDENTITY_INSERT {table_name} ON"))
-    #     print("identity")
-    #     # Insert the data into the SQL table
-    #     df.to_sql(table_name, con=engine, if_exists='append', index=False)
-
-    #     # Disable IDENTITY_INSERT for the table
-    #     conn.execute(text(f"SET IDENTITY_INSERT {table_name} OFF"))
-
-# # Function to insert phone numbers into the 'phone' table
-# def insert_phone_numbers(engine, contact_id, phone_numbers):
-#     metadata = MetaData()
-
-#     # Define the 'phone' table for use
-#     phone_table = Table('phone', metadata, autoload_with=engine)
-
-#     # Insert phone numbers into the 'phone' table
-#     with engine.connect() as conn:
-#         for phone in phone_numbers:
-#             conn.execute(phone_table.insert().values(contact_id=contact_id, phone_number=phone))
-    
-#     print(f"Inserted {len(phone_numbers)} phone numbers for contact ID {contact_id}.")
-
-# def parse_phone_numbers(phone_data: str):
-
-
-# Function to process the YAML file and extract contact and phone information
 def process_file(file_path, engine):
     try:
         # Read the YAML file
@@ -187,12 +150,18 @@ def process_file(file_path, engine):
     """ 
     notes = data[4:]
     for note in notes:
-        if isinstance(note, dict) and 'Note' in note:
-            note_id = list(note.keys()[0].split()[1].rstrip(':'))
-            note_details = note['Note']
+        if isinstance(note, dict):
+            note_key = next(iter(note.keys()))  # 'Note 634287204'
+            note_id = note_key.split()[1].rstrip(':')  # Extract just the ID, e.g., '634287204'
+            print(f"Extracted note_id: {note_id}")  # Debugging: print the note_id
+
+        # Now access the details using the note_key
+        note_details = note.get(note_key)  # Access the value associated with the note key
+        if note_details is not None:
+            # Process the note details if found
             note_data = {
                 'note_id': note_id,
-                'contact_id': contact_header_data['ID'],
+                'contact_id': contact_header_data['id'],
                 'author': note_details[0].get('Author'),
                 'written_date': note_details[1].get('Written'),
                 'about': note_details[2].get('About'),
@@ -200,81 +169,8 @@ def process_file(file_path, engine):
             }
             insert_to_sql_server(engine, 'notes', note_data)
             # print(f"Inserted note record: {note_data}")
-
-
-    # if len(data) > 3 and 'Note' in data[4]:
-    #     contact_info = data[2]['Contact']
-    #     phone_numbers = []
-    #     email_addresses = []
-    #     addresses = []
-
-    #     for item in contact_info:
-    
-    # if len(data) > 4:
-    #     notes = data[4:]  # Start from data[4] to include all subsequent notes
-    #     for note in notes:
-    #         if isinstance(note, list) and note.startswith('Note'):
-    #             note_id = note.split()[1].rstrip(':')  # Extract the note ID
-    #             author = None
-    #             written_date = None
-    #             about = None
-    #             body = None
-
-    #             # Extract the relevant details from the note
-    #             for line in notes[notes.index(note) + 1:]:
-    #                 if line.startswith('Author:'):
-    #                     author = line.split('Author:')[1].strip()
-    #                 elif line.startswith('Written:'):
-    #                     written_date = line.split('Written:')[1].strip().strip('"')
-    #                 elif line.startswith('About:'):
-    #                     about = line.split('About:')[1].strip()
-    #                 elif line.startswith('Body:'):
-    #                     body = line.split('Body:')[1].strip()
-
-    #                 # Break when reaching the next note
-    #                 if isinstance(line, str) and line.startswith('Note'):
-    #                     break
-                
-    #             # Prepare data for the notes table
-    #             note_data = {
-    #                 'note_id': note_id,
-    #                 'contact_id': contact_header_data['id'],
-    #                 'author': author,
-    #                 'written_date': written_date,
-    #                 'about': about,
-    #                 'body': body
-    #             }
-                
-    #             # Insert note data into the SQL Server table
-    #             insert_to_sql_server(engine, 'notes', note_data)  # Assuming a 'notes' table exists
-    #             print(f"Inserted note record: {note_data}")
-
-
-    # # Assuming the entire file represents a single contact
-    # if isinstance(data, list) and len(data) > 0:
-    #     contact = data[0]  # Get the first (and only) contact
-
-    #     # Extract ID and Name
-    #     person_data = {
-    #         'ID': contact.get('ID'),
-    #         'Name': contact.get('Name')
-    #     }
-
-    #     # Insert contact data into the 'contacts' table
-    #     insert_to_sql_server(engine, 'contacts', person_data)
-    #     print(f"Inserted contact record: {person_data}")
-
-    #     # Extract and insert phone numbers
-    #     if len(data) > 2 and 'Contact' in data[2]:
-    #         contact_info = data[2]['Contact']
-    #         phone_numbers = contact_info[1][1]  # Assuming this is the list of phone numbers
-    #         insert_phone_numbers(engine, person_data['ID'], phone_numbers)
-    #     else:
-    #         print("No phone numbers found for this contact.")
-    # else:
-    #     print("No valid contact data found.")
-
-
+        else:
+            print(f"Warning: No details found for {note_id}")  # Debugging: print warning
 if __name__ == '__main__':
     # Define connection details to your SQL Server
     server = r'dylans\mssqlserver2022'
@@ -289,8 +185,8 @@ if __name__ == '__main__':
     create_tables(engine)
 
     # Process the file and insert data
-    file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts'
-    # file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts\Dylan Valladares.txt'
+    # file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts'
+    file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts\Dylan Valladares.txt'
     # file_path = r'D:\Baldante\highrise-export-May03-CorinneMorgan\contacts\Kathleen (goes by Katie) Kiley (Ferriola).txt'
     process_file(file_path, engine)
 
