@@ -1,8 +1,19 @@
+from datetime import datetime
 import yaml
 import pandas as pd
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, text
 
-# Function to connect to SQL Server using SQLAlchemy
+def process_written_date(date_string):
+    """ Convert date string to SQL Server compatible format """
+    try:
+        # Parse the date string into a datetime object
+        date_obj = datetime.strptime(date_string, "%B %d, %Y %H:%M")
+        # Format the datetime object to the SQL-compatible format (DATETIME(3))
+        return date_obj.strftime("%Y-%m-%d %H:%M:%S.000")
+    except ValueError:
+        print(f"Warning: Could not parse date: {date_string}")
+        return None
+
 def connect_to_sql_server(server, database, username, password):
         
     connection_string = (
@@ -11,7 +22,6 @@ def connect_to_sql_server(server, database, username, password):
     engine = create_engine(connection_string)
     return engine
 
-# Function to create the 'contacts' and 'phone' tables if they don't exist
 def create_tables(engine):
     metadata = MetaData()
 
@@ -158,12 +168,17 @@ def process_file(file_path, engine):
         # Now access the details using the note_key
         note_details = note.get(note_key)  # Access the value associated with the note key
         if note_details is not None:
-            # Process the note details if found
+            written_date_str = note_details[1].get('Written')  # Get the written date string
+            if written_date_str:
+                written_date = process_written_date(written_date_str)  # Convert to SQL format
+            else:
+                written_date = None  # Handle missing written_date
+
             note_data = {
                 'note_id': note_id,
                 'contact_id': contact_header_data['id'],
                 'author': note_details[0].get('Author'),
-                'written_date': note_details[1].get('Written'),
+                'written_date': written_date,
                 'about': note_details[2].get('About'),
                 'body': note_details[3].get('Body')
             }
