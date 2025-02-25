@@ -17,7 +17,7 @@ Notes:
 	- For example, you cannot ALTER a table to add a column, then select that column in the same batch - because while compiling the execution plan, that column does not exist for selecting.
 */
 
-USE BaldanteSA
+USE BaldanteHighriseSA
 GO
 
 -- Create a temporary table to store variable values

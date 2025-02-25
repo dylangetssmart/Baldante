@@ -11,18 +11,18 @@ notes:
 	-
 */
 
-use [BaldanteHighriseSA]
+use BaldanteHighriseSA
 go
 
 if not exists (
 		select
 			*
 		from sys.columns
-		where Name = N'saga_party'
+		where Name = N'saga'
 			and object_id = OBJECT_ID(N'sma_TRN_Plaintiff')
 	)
 begin
-	alter table [sma_TRN_Plaintiff] add [saga_party] INT null;
+	alter table [sma_TRN_Plaintiff] add [saga] INT null;
 end
 
 -- source_id
@@ -74,7 +74,42 @@ go
 
 insert into [sma_TRN_Plaintiff]
 	(
-	[plnnCaseID], [plnnContactCtg], [plnnContactID], [plnnAddressID], [plnnRole], [plnbIsPrimary], [plnbWCOut], [plnnPartiallySettled], [plnbSettled], [plnbOut], [plnbSubOut], [plnnSeatBeltUsed], [plnnCaseValueID], [plnnCaseValueFrom], [plnnCaseValueTo], [plnnPriority], [plnnDisbursmentWt], [plnbDocAttached], [plndFromDt], [plndToDt], [plnnRecUserID], [plndDtCreated], [plnnModifyUserID], [plndDtModified], [plnnLevelNo], [plnsMarked], [saga], [plnnNoInj], [plnnMissing], [plnnLIPBatchNo], [plnnPlaintiffRole], [plnnPlaintiffGroup], [plnnPrimaryContact], [saga_party], [source_id], [source_db], [source_ref]
+		[plnnCaseID],
+		[plnnContactCtg],
+		[plnnContactID],
+		[plnnAddressID],
+		[plnnRole],
+		[plnbIsPrimary],
+		[plnbWCOut],
+		[plnnPartiallySettled],
+		[plnbSettled],
+		[plnbOut],
+		[plnbSubOut],
+		[plnnSeatBeltUsed],
+		[plnnCaseValueID],
+		[plnnCaseValueFrom],
+		[plnnCaseValueTo],
+		[plnnPriority],
+		[plnnDisbursmentWt],
+		[plnbDocAttached],
+		[plndFromDt],
+		[plndToDt],
+		[plnnRecUserID],
+		[plndDtCreated],
+		[plnnModifyUserID],
+		[plndDtModified],
+		[plnnLevelNo],
+		[plnsMarked],
+		[plnnNoInj],
+		[plnnMissing],
+		[plnnLIPBatchNo],
+		[plnnPlaintiffRole],
+		[plnnPlaintiffGroup],
+		[plnnPrimaryContact],
+		[saga],
+		[source_id],
+		[source_db],
+		[source_ref]
 	)
 	select
 		cas.casnCaseID  as [plnncaseid],
@@ -82,6 +117,7 @@ insert into [sma_TRN_Plaintiff]
 		cio.CID			as [plnncontactid],
 		cio.AID			as [plnnaddressid],
 		s.sbrnSubRoleId as [plnnrole],
+
 		1				as [plnbisprimary],
 		0,
 		0,
@@ -108,115 +144,75 @@ insert into [sma_TRN_Plaintiff]
 		null,
 		null,
 		null,
-		null,
 		1				as [plnnprimarycontact],
-		p.TableIndex	as [saga_party],
+		c.ID			as [saga],
 		null			as [source_id],
-		'needles'		as [source_db],
-		'party_indexed' as [source_ref]
+		'highrise'		as [source_db],
+		'contacts'		as [source_ref]
 	--SELECT  * -- cas.casncaseid, p.role, p.party_ID, pr.[needles roles], pr.[sa roles], pr.[sa party], s.*
-	from JoelBieberNeedles.[dbo].[party_Indexed] p
+	from Baldante..contacts c
 	join [sma_TRN_Cases] cas
-		on cas.cassCaseNumber = p.case_id
+		on cas.saga = c.ID
 	join IndvOrgContacts_Indexed cio
-		on cio.SAGA = p.party_id
-	join [PartyRoles] pr
-		on pr.[Needles Roles] = p.[role]
-	join [sma_MST_SubRole] s
-		on cas.casnOrgCaseTypeID = s.sbrnCaseTypeID
-			and s.sbrsDscrptn = [SA Roles]
-			and s.sbrnRoleID = 4
-	where pr.[SA Party] = 'Plaintiff'
---and cas.casnCaseID = 22985
-go
-
-
--------------------------------------------------------------------------------
--- Insert plaintiffs from conversion.user_case_plaintiff_defendant
--- see: 1.06_contact_indv_user_plaintiff_defendant.sql
--------------------------------------------------------------------------------
-insert into [sma_TRN_Plaintiff]
-	(
-	[plnnCaseID], [plnnContactCtg], [plnnContactID], [plnnAddressID], [plnnRole], [plnbIsPrimary], [plnbWCOut], [plnnPartiallySettled], [plnbSettled], [plnbOut], [plnbSubOut], [plnnSeatBeltUsed], [plnnCaseValueID], [plnnCaseValueFrom], [plnnCaseValueTo], [plnnPriority], [plnnDisbursmentWt], [plnbDocAttached], [plndFromDt], [plndToDt], [plnnRecUserID], [plndDtCreated], [plnnModifyUserID], [plndDtModified], [plnnLevelNo], [plnsMarked], [saga], [plnnNoInj], [plnnMissing], [plnnLIPBatchNo], [plnnPlaintiffRole], [plnnPlaintiffGroup], [plnnPrimaryContact], [saga_party], [source_id], [source_db], [source_ref]
-	)
-	select
-		cas.casnCaseID								  as [plnncaseid],
-		cio.CTG										  as [plnncontactctg],
-		cio.CID										  as [plnncontactid],
-		cio.AID										  as [plnnaddressid],
-		s.sbrnSubRoleId								  as [plnnrole],
-		1											  as [plnbisprimary],
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		null,
-		null,
-		null,
-		null,
-		null,
-		null,
-		GETDATE(),
-		null,
-		368											  as [plnnrecuserid],
-		GETDATE()									  as [plnddtcreated],
-		null,
-		null,
-		null										  as [plnnlevelno],
-		null,
-		'',
-		null,
-		null,
-		null,
-		null,
-		null,
-		1											  as [plnnprimarycontact],
-		null										  as [saga_party],
-		conv_ucpd.contact_name						  as [source_id],
-		'needles'									  as [source_db],
-		'cte_user_case_plaintiff_defendant:plaintiff' as [source_ref]
-	--SELECT  * cas.casnOrgCaseTypeID -- cas.casncaseid, p.role, p.party_ID, pr.[needles roles], pr.[sa roles], pr.[sa party], s.*
-	from JoelBieberNeedles..user_case_data ucd
-	-- case
-	join sma_TRN_Cases cas
-		on cas.cassCaseNumber = CONVERT(VARCHAR, ucd.casenum)
-	-- contact: conversion.user_case_plaintiff_defendant > sma_mst_indvcontacts > indvorgcontacts_indexed
-	join conversion.user_case_plaintiff_defendant conv_ucpd
-		on conv_ucpd.contact_name = ucd.PLAINTIFF
-			and conv_ucpd.plaintiff_or_defendant = 'P'
-	join sma_mst_indvcontacts indv
-		on indv.source_id = conv_ucpd.contact_name
-			and indv.source_ref = 'cte_user_case_plaintiff_defendant:plaintiff'
-	join IndvOrgContacts_Indexed cio
-		on cio.cid = indv.cinncontactid
-			and cio.ctg = 1
-	-- role
+		on cio.SAGA = c.ID
 	join [sma_MST_SubRole] s
 		on cas.casnOrgCaseTypeID = s.sbrnCaseTypeID
 			and s.sbrsDscrptn = '(P)-Plaintiff'
 			and s.sbrnRoleID = 4
-
-/*
-subrole records added by implementation
-	select * from sma_MST_SubRole where sbrnCaseTypeID in (1780,1685) order by sbrsDscrptn
-	SELECT * FROM sma_MST_Users smu
-	select * from BaldanteHighriseSA.conversion.user_case_plaintiff_defendant ucpd
---	select * from sma_MST_IndvContacts smic where smic.source_ref = 'cte_user_case_plaintiff_defendant:plaintiff'
-*/
+--where pr.[SA Party] = 'Plaintiff'
+--and cas.casnCaseID = 22985
 go
 
-/*
+--select distinct
+--	stc.casnOrgCaseTypeID
+--from sma_TRN_Cases stc
+--where
+--	source_db = 'highrise'
+
+--SELECT * FROM sma_MST_SubRole smsr where smsr.sbrnCaseTypeID = 830
+--SELECT * FROM sma_MST_CaseType smct
+
+
 -------------------------------------------------------------------------------
-##############################################################################
+--##############################################################################
 -------------------------------------------------------------------------------
 ---(Appendix A)-- every case need at least one plaintiff
-*/
 
 insert into [sma_TRN_Plaintiff]
 	(
-	[plnnCaseID], [plnnContactCtg], [plnnContactID], [plnnAddressID], [plnnRole], [plnbIsPrimary], [plnbWCOut], [plnnPartiallySettled], [plnbSettled], [plnbOut], [plnbSubOut], [plnnSeatBeltUsed], [plnnCaseValueID], [plnnCaseValueFrom], [plnnCaseValueTo], [plnnPriority], [plnnDisbursmentWt], [plnbDocAttached], [plndFromDt], [plndToDt], [plnnRecUserID], [plndDtCreated], [plnnModifyUserID], [plndDtModified], [plnnLevelNo], [plnsMarked], [saga], [plnnNoInj], [plnnMissing], [plnnLIPBatchNo], [plnnPlaintiffRole], [plnnPlaintiffGroup], [plnnPrimaryContact]
+		[plnnCaseID],
+		[plnnContactCtg],
+		[plnnContactID],
+		[plnnAddressID],
+		[plnnRole],
+		[plnbIsPrimary],
+		[plnbWCOut],
+		[plnnPartiallySettled],
+		[plnbSettled],
+		[plnbOut],
+		[plnbSubOut],
+		[plnnSeatBeltUsed],
+		[plnnCaseValueID],
+		[plnnCaseValueFrom],
+		[plnnCaseValueTo],
+		[plnnPriority],
+		[plnnDisbursmentWt],
+		[plnbDocAttached],
+		[plndFromDt],
+		[plndToDt],
+		[plnnRecUserID],
+		[plndDtCreated],
+		[plnnModifyUserID],
+		[plndDtModified],
+		[plnnLevelNo],
+		[plnsMarked],
+		[saga],
+		[plnnNoInj],
+		[plnnMissing],
+		[plnnLIPBatchNo],
+		[plnnPlaintiffRole],
+		[plnnPlaintiffGroup],
+		[plnnPrimaryContact]
 	)
 	select
 		casnCaseID as [plnncaseid],
@@ -269,27 +265,28 @@ insert into [sma_TRN_Plaintiff]
 	from sma_trn_cases cas
 	left join [sma_TRN_Plaintiff] t
 		on t.plnncaseid = cas.casnCaseID
-	where plnncaseid is null
+	where
+		plnncaseid is null
 go
 
 
 
-update sma_TRN_Plaintiff
-set plnbIsPrimary = 0
+--update sma_TRN_Plaintiff
+--set plnbIsPrimary = 0
 
-update sma_TRN_Plaintiff
-set plnbIsPrimary = 1
-from (
-	select distinct
-		t.plnnCaseID,
-		ROW_NUMBER() over (partition by t.plnnCaseID order by p.record_num) as rownumber,
-		t.plnnPlaintiffID													as id
-	from sma_TRN_Plaintiff t
-	left join JoelBieberNeedles.[dbo].[party_indexed] p
-		on p.TableIndex = t.saga_party
-) a
-where a.rownumber = 1
-and plnnPlaintiffID = a.id
+--update sma_TRN_Plaintiff
+--set plnbIsPrimary = 1
+--from (
+--	select distinct
+--		t.plnnCaseID,
+--		ROW_NUMBER() over (partition by t.plnnCaseID order by p.record_num) as rownumber,
+--		t.plnnPlaintiffID													as id
+--	from sma_TRN_Plaintiff t
+--	left join JoelBieberNeedles.[dbo].[party_Indexed] p
+--		on p.TableIndex = t.saga_party
+--) a
+--where a.rownumber = 1
+--and plnnPlaintiffID = a.id
 
 
 

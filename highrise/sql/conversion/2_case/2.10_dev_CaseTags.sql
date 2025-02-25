@@ -1,15 +1,15 @@
 USE BaldanteHighriseSA
 
 -- Create junction table
-DROP TABLE IF EXISTS dbo.ContactTags;
+DROP TABLE IF EXISTS conversion.ContactTags;
 
-CREATE TABLE dbo.ContactTags (
+CREATE TABLE conversion.ContactTags (
 	id INT IDENTITY PRIMARY KEY
    ,contact_id INT NOT NULL
    ,tag NVARCHAR(255) NOT NULL
 );
 
-INSERT INTO dbo.ContactTags
+INSERT INTO conversion.ContactTags
 	(
 	contact_id
    ,tag
@@ -23,7 +23,7 @@ INSERT INTO dbo.ContactTags
 
 SELECT
 	*
-FROM ContactTags ct
+FROM conversion.ContactTags ct
 
 -- Create tags
 INSERT INTO [dbo].[sma_MST_CaseTags]
@@ -44,7 +44,7 @@ INSERT INTO [dbo].[sma_MST_CaseTags]
 	   ,GETDATE()  AS DtCreated
 	   ,368		   AS ModifyUserID
 	   ,GETDATE()  AS dDtModified
-	FROM ContactTags ct
+	FROM conversion.ContactTags ct
 	WHERE NOT EXISTS (
 			SELECT
 				1
@@ -71,7 +71,7 @@ INSERT INTO [dbo].[sma_MST_CaseTags]
 	   ,GETDATE() AS DtCreated
 	   ,368		  AS ModifyUserID
 	   ,GETDATE() AS dDtModified
-	FROM ContactTags ct
+	FROM conversion.ContactTags ct
 GO
 --SELECT * FROM sma_MST_CaseTags smct
 
@@ -92,7 +92,7 @@ INSERT INTO [dbo].[sma_TRN_CaseTags]
 	   ,GETDATE()
 	   ,NULL AS DeleteUserID
 	   ,NULL AS DtDeleted
-	FROM BaldanteSA..ContactTags ct
+	FROM BaldanteSA.conversion.ContactTags ct
 	JOIN sma_TRN_Cases stc
 		ON stc.cassCaseNumber = ct.contact_id
 	JOIN sma_MST_CaseTags smct

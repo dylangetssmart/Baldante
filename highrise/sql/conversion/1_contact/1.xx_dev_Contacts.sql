@@ -54,10 +54,10 @@ END
 
 
 --(0) saga field for needles names_id ---
-ALTER TABLE [sma_MST_IndvContacts]
-ALTER COLUMN saga varchar(100)
-ALTER TABLE [sma_MST_OrgContacts]
-ALTER COLUMN saga varchar(100)
+--ALTER TABLE [sma_MST_IndvContacts]
+--ALTER COLUMN saga varchar(100)
+--ALTER TABLE [sma_MST_OrgContacts]
+--ALTER COLUMN saga varchar(100)
 
 
 ---------------------------
