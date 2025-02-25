@@ -2,6 +2,11 @@ from datetime import datetime
 import yaml
 import pandas as pd
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, text
+import logging
+from create_tables import create_tables
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 def process_written_date(date_string):
     """ Convert date string to SQL Server compatible format """
@@ -11,92 +16,55 @@ def process_written_date(date_string):
         # Format the datetime object to the SQL-compatible format (DATETIME(3))
         return date_obj.strftime("%Y-%m-%d %H:%M:%S.000")
     except ValueError:
-        print(f"Warning: Could not parse date: {date_string}")
+        logging.warning(f"Warning: Could not parse date: {date_string}")
         return None
 
 def connect_to_sql_server(server, database, username, password):
-        
     connection_string = (
         f'mssql+pyodbc://{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes'
     )
     engine = create_engine(connection_string)
     return engine
 
-def create_tables(engine):
-    metadata = MetaData()
-
-    contacts_table = Table('contacts', metadata,
-        Column('ID', Integer, primary_key=True, autoincrement=False),
-        Column('Name', String),
-        Column('Tags', String)
-    )
-
-    phone_table = Table('phone', metadata,
-        # Column('id', Integer, primary_key=True, autoincrement=False),
-        Column('contact_id', Integer),  # Add foreign key to 'contacts'
-        # Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Add foreign key to 'contacts'
-        Column('phone_number', String)
-    )
-
-    email_table = Table('email', metadata,
-        # Column('id', Integer, primary_key=True, autoincrement=False),
-        Column('contact_id', Integer),  # Add foreign key to 'contacts'
-        # Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Add foreign key to 'contacts'
-        Column('email_address', String)
-    )
-
-    address_table = Table('address', metadata,
-        # Column('id', Integer, primary_key=True, autoincrement=False),
-        Column('contact_id', Integer),  # Add foreign key to 'contacts'
-        # Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Add foreign key to 'contacts'
-        Column('address', String)
-    )
-
-    notes_table = Table('notes', metadata,
-        Column('note_id', Integer, primary_key=True, autoincrement=False),  # Assuming note_id can be a string
-        Column('contact_id', Integer),  # Foreign key to 'contacts'
-        # Column('contact_id', Integer, ForeignKey('contacts.ID')),  # Foreign key to 'contacts'
-        Column('author', String),
-        Column('written_date', String),  # You can change this to DateTime if you want to store actual dates
-        Column('about', String),
-        Column('body', String)
-    )
-
-    metadata.create_all(engine)
-
-def insert_to_sql_server(engine, table_name, data):
-    # df = pd.DataFrame([data])
-    # df.to_sql(table_name, con=engine, if_exists='append', index=False)
-
+def insert_to_sql_server(file_path, engine, table_name, data):
     try:
         df = pd.DataFrame([data])
         df.to_sql(table_name, con=engine, if_exists='append', index=False)
-        print(f"Data inserted into {table_name}: {data}")
+        logging.debug(f"Data inserted into {table_name}: {data}")
     except Exception as e:
-        print(f"Error inserting data into {table_name}: {e}")
+        logging.error(f"{file_path} - Error inserting data into {table_name}: {e}")
 
 def process_file(file_path, engine):
+    contact_count = 0  # Initialize counter for contacts
     try:
         # Read the YAML file
         with open(file_path, 'r', encoding='utf-8') as file:
             data = yaml.safe_load(file)
     except yaml.YAMLError as exc:
-        print(f"Error parsing YAML file {file_path}: {exc}")
+        logging.error(f"Error parsing YAML file {file_path}: {exc}")
         return 
     
     """ Contact Record -----------------------------------------------------------------------------
     id = data[0]['ID']
     name = data[0]['Name']
     tags = data[0]['Tags']
+    background = data[3]['Background']
     """
     contact_header = data[0]
-    contact_header_data = {
+
+    background = None
+    if len(data) > 3 and isinstance(data[3], dict) and 'Background' in data[3]:
+        background = data[3]['Background']
+
+    contact_data = {
         'id': contact_header.get('ID'),
         'name': contact_header.get('Name'),
-        'tags': ', '.join(contact_header.get('Tags', [])) if contact_header.get('Tags') else None
+        'tags': ', '.join(contact_header.get('Tags', [])) if contact_header.get('Tags') else None,
+        'background': background
     }
 
-    insert_to_sql_server(engine, 'contacts', contact_header_data)
+    insert_to_sql_server(file_path, engine, 'contacts', contact_data)
+    contact_count += 1  # Increment counter for each contact inserted
 
     """ Contact Info  -----------------------------------------------------------------------------
     phone:      data[2]['Contact'][0] = "Phone_numbers"
@@ -115,12 +83,12 @@ def process_file(file_path, engine):
                 phone_numbers = item[1]
                 for phone_number in phone_numbers:
                     phone_data = {
-                        'contact_id': contact_header_data['id'],
+                        'contact_id': contact_data['id'],
                         'phone_number': phone_number
                     }
                 
-                insert_to_sql_server(engine, 'phone', phone_data)
-                # print(f"Inserted phone record: {phone_data}")
+                    insert_to_sql_server(file_path, engine, 'phone', phone_data)
+                    # logging.debug(f"Inserted phone record: {phone_data}")
 
             # Email addresses ----------------------------------------------------
             if isinstance(item, list) and 'Email_addresses' in item[0]:
@@ -128,12 +96,12 @@ def process_file(file_path, engine):
                 
                 for email_address in email_addresses:
                     email_data = {
-                        'contact_id': contact_header_data['id'],
+                        'contact_id': contact_data['id'],
                         'email_address': email_address
                     }
 
-                    insert_to_sql_server(engine, 'email', email_data)
-                    # print(f"Inserted email record: {email_data}")
+                    insert_to_sql_server(file_path, engine, 'email', email_data)
+                    # logging.debug(f"Inserted email record: {email_data}")
 
             # Addresses ----------------------------------------------------
             if isinstance(item, list) and 'Addresses' in item[0]:
@@ -146,14 +114,13 @@ def process_file(file_path, engine):
                         formatted_address = ', '.join([line.strip() for line in address.splitlines()])
 
                     address_data = {
-                        'contact_id': contact_header_data['id'],
+                        'contact_id': contact_data['id'],
                         'address': formatted_address
                     }
                 
-                    insert_to_sql_server(engine, 'address', address_data)
-                    # print(f"Inserted address record: {address_data}")
+                    insert_to_sql_server(file_path, engine, 'address', address_data)
+                    # logging.debug(f"Inserted address record: {address_data}")
         
-
     """ Notes  -----------------------------------------------------------------------------    
     data[4] + contains notes
     loop through data[4] to end of file for entries named 'Note'
@@ -162,8 +129,8 @@ def process_file(file_path, engine):
     for note in notes:
         if isinstance(note, dict):
             note_key = next(iter(note.keys()))  # 'Note 634287204'
-            note_id = note_key.split()[1].rstrip(':')  # Extract just the ID, e.g., '634287204'
-            print(f"Extracted note_id: {note_id}")  # Debugging: print the note_id
+            note_id = note_key.split()[-1].rstrip(':')  # Extract just the ID, e.g., '634287204'
+            logging.debug(f"Extracted note_id: {note_id}")  # Debugging: print the note_id
 
         # Now access the details using the note_key
         note_details = note.get(note_key)  # Access the value associated with the note key
@@ -176,16 +143,20 @@ def process_file(file_path, engine):
 
             note_data = {
                 'note_id': note_id,
-                'contact_id': contact_header_data['id'],
+                'type': 'Note' if 'Note' in note_key else 'Task',
+                'contact_id': contact_data['id'],
                 'author': note_details[0].get('Author'),
                 'written_date': written_date,
                 'about': note_details[2].get('About'),
                 'body': note_details[3].get('Body')
             }
-            insert_to_sql_server(engine, 'notes', note_data)
-            # print(f"Inserted note record: {note_data}")
+            insert_to_sql_server(file_path, engine, 'notes', note_data)
+            # logging.debug(f"Inserted note record: {note_data}")
         else:
-            print(f"Warning: No details found for {note_id}")  # Debugging: print warning
+            logging.warning(f"Warning: No details found for {note_id}")  # Debugging: print warning
+
+    # logging.info(f"Total contacts inserted: {contact_count}")  # Log the total number of contacts inserted
+
 if __name__ == '__main__':
     # Define connection details to your SQL Server
     server = r'dylans\mssqlserver2022'
@@ -201,7 +172,8 @@ if __name__ == '__main__':
 
     # Process the file and insert data
     # file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts'
-    file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts\Dylan Valladares.txt'
+    file_path = r'D:\Baldante\highrise\data\Highrise_Backup_5_6_2024\Highrise_Backup_12_4_2024\highrise-export-01574-96183\contacts\45842.013.txt'
+    # file_path = r'D:\Baldante\highrise\data\Highrise_Backup_5_6_2024\Highrise_Backup_12_4_2024\highrise-export-01574-96183\contacts\Jared Thompson.txt'
     # file_path = r'D:\Baldante\highrise-export-May03-CorinneMorgan\contacts\Kathleen (goes by Katie) Kiley (Ferriola).txt'
     process_file(file_path, engine)
 

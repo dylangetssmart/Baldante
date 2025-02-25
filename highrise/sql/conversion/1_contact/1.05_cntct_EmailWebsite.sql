@@ -1,4 +1,4 @@
-USE BaldanteSA
+USE BaldanteHighriseSA
 GO
 /*
 alter table [sma_MST_EmailWebsite] disable trigger all

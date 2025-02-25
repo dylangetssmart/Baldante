@@ -7,7 +7,7 @@ Other
 */
 
 
-USE BaldanteSA
+USE BaldanteHighriseSA
 GO
 /*
 alter table [sma_MST_Address] disable trigger all

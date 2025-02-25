@@ -1,4 +1,4 @@
-USE BaldanteSA
+USE BaldanteHighriseSA
 
 -- Create junction table
 DROP TABLE IF EXISTS dbo.ContactTags;
