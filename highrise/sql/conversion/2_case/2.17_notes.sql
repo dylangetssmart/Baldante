@@ -1,4 +1,4 @@
-USE BaldanteSA
+USE BaldanteHighriseSA
 GO
 --delete from sma_TRN_Notes
 /*
