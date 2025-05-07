@@ -149,12 +149,13 @@ insert into [sma_TRN_Plaintiff]
 		null			as [source_id],
 		'highrise'		as [source_db],
 		'contacts'		as [source_ref]
-	--SELECT  * -- cas.casncaseid, p.role, p.party_ID, pr.[needles roles], pr.[sa roles], pr.[sa party], s.*
+	SELECT  * 
 	from Baldante..contacts c
 	join [sma_TRN_Cases] cas
 		on cas.saga = c.ID
 	join IndvOrgContacts_Indexed cio
 		on cio.SAGA = c.ID
+	where c.name = 'chadrick brown'
 	join [sma_MST_SubRole] s
 		on cas.casnOrgCaseTypeID = s.sbrnCaseTypeID
 			and s.sbrsDscrptn = '(P)-Plaintiff'

@@ -3,7 +3,7 @@ import yaml
 import pandas as pd
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, text
 import logging
-from create_tables import create_tables
+from _lib.create_tables import create_tables
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')

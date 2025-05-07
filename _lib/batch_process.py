@@ -1,6 +1,6 @@
 import os
 import logging
-from extract_txt import connect_to_sql_server, create_tables, process_file
+from _lib.extract_txt import connect_to_sql_server, create_tables, process_file
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 

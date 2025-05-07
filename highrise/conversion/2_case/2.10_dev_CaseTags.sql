@@ -24,6 +24,7 @@ INSERT INTO conversion.ContactTags
 SELECT
 	*
 FROM conversion.ContactTags ct
+SELECT @@VERSION;
 
 -- Create tags
 INSERT INTO [dbo].[sma_MST_CaseTags]
