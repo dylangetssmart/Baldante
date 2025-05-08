@@ -1,12 +1,12 @@
-from datetime import datetime
 import yaml
 import pandas as pd
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, text
-import logging
+from datetime import datetime
+# from sqlalchemy import create_engine
 from _lib.create_tables import create_tables
+from sa_conversion_utils.utilities.setup_logger import setup_logger
+from sa_conversion_utils.utilities.create_engine import main as create_engine
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logger = setup_logger(__name__, log_file="extract_highrise.log")    
 
 def process_written_date(date_string):
     """ Convert date string to SQL Server compatible format """
@@ -16,7 +16,7 @@ def process_written_date(date_string):
         # Format the datetime object to the SQL-compatible format (DATETIME(3))
         return date_obj.strftime("%Y-%m-%d %H:%M:%S.000")
     except ValueError:
-        logging.warning(f"Warning: Could not parse date: {date_string}")
+        logger.warning(f"Warning: Could not parse date: {date_string}")
         return None
 
 def connect_to_sql_server(server, database, username, password):
@@ -30,9 +30,10 @@ def insert_to_sql_server(file_path, engine, table_name, data):
     try:
         df = pd.DataFrame([data])
         df.to_sql(table_name, con=engine, if_exists='append', index=False)
-        logging.debug(f"Data inserted into {table_name}: {data}")
+        logger.info(f"Data inserted into {table_name}")
+        logger.debug(f"Data inserted into {table_name}: {data}")  # Debugging: print the data inserted
     except Exception as e:
-        logging.error(f"{file_path} - Error inserting data into {table_name}: {e}")
+        logger.error(f"{file_path} - Error inserting data into {table_name}: {e}")
 
 def process_file(file_path, engine):
     contact_count = 0  # Initialize counter for contacts
@@ -41,7 +42,7 @@ def process_file(file_path, engine):
         with open(file_path, 'r', encoding='utf-8') as file:
             data = yaml.safe_load(file)
     except yaml.YAMLError as exc:
-        logging.error(f"Error parsing YAML file {file_path}: {exc}")
+        logger.error(f"Error parsing YAML file {file_path}: {exc}")
         return 
     
     """ Contact Record -----------------------------------------------------------------------------
@@ -67,6 +68,7 @@ def process_file(file_path, engine):
     contact_count += 1  # Increment counter for each contact inserted
 
     """ Contact Info  -----------------------------------------------------------------------------
+    data[2]
     phone:      data[2]['Contact'][0] = "Phone_numbers"
     email:      data[2]['Contact'][0] = "Email_addresses"
     address:    data[2]['Contact'][0] = "Addresses"
@@ -88,7 +90,6 @@ def process_file(file_path, engine):
                     }
                 
                     insert_to_sql_server(file_path, engine, 'phone', phone_data)
-                    # logging.debug(f"Inserted phone record: {phone_data}")
 
             # Email addresses ----------------------------------------------------
             if isinstance(item, list) and 'Email_addresses' in item[0]:
@@ -101,7 +102,6 @@ def process_file(file_path, engine):
                     }
 
                     insert_to_sql_server(file_path, engine, 'email', email_data)
-                    # logging.debug(f"Inserted email record: {email_data}")
 
             # Addresses ----------------------------------------------------
             if isinstance(item, list) and 'Addresses' in item[0]:
@@ -119,10 +119,9 @@ def process_file(file_path, engine):
                     }
                 
                     insert_to_sql_server(file_path, engine, 'address', address_data)
-                    # logging.debug(f"Inserted address record: {address_data}")
         
     """ Notes  -----------------------------------------------------------------------------    
-    data[4] + contains notes
+    data[4] +
     loop through data[4] to end of file for entries named 'Note'
     """ 
     notes = data[4:]
@@ -130,7 +129,7 @@ def process_file(file_path, engine):
         if isinstance(note, dict):
             note_key = next(iter(note.keys()))  # 'Note 634287204'
             note_id = note_key.split()[-1].rstrip(':')  # Extract just the ID, e.g., '634287204'
-            logging.debug(f"Extracted note_id: {note_id}")  # Debugging: print the note_id
+            logger.debug(f"Extracted note_id: {note_id}")  # Debugging: print the note_id
 
         # Now access the details using the note_key
         note_details = note.get(note_key)  # Access the value associated with the note key
@@ -153,28 +152,40 @@ def process_file(file_path, engine):
             insert_to_sql_server(file_path, engine, 'notes', note_data)
             # logging.debug(f"Inserted note record: {note_data}")
         else:
-            logging.warning(f"Warning: No details found for {note_id}")  # Debugging: print warning
+            logger.warning(f"No details found for {note_id}")  # Debugging: print warning
 
     # logging.info(f"Total contacts inserted: {contact_count}")  # Log the total number of contacts inserted
 
 if __name__ == '__main__':
     # Define connection details to your SQL Server
-    server = r'dylans\mssqlserver2022'
-    database = 'Baldante'
-    username = 'dsmith'
-    password = 'SAconversion@2024'
+    # server = r'dylans\mssqlserver2022'
+    # database = 'Baldante'
+    # username = 'dsmith'
+    # password = 'SAconversion@2024'
     
+    """CLI entry point"""
+    import argparse
+    parser = argparse.ArgumentParser(description="Process SQL files and save results to an Excel file.")
+    parser.add_argument("-s", "--server", required=True, help="SQL Server")
+    parser.add_argument("-d", "--database", required=True, help="Database")
+    parser.add_argument("-i", "--input", required=True, help="Path to the input folder containing SQL files.")
+    
+    args = parser.parse_args()
     # Establish a connection
-    engine = connect_to_sql_server(server, database, username, password)
+    # engine = connect_to_sql_server(server, database, username, password)
+    engine = create_engine(server=args.server, database=args.database)
 
     # Create tables
     create_tables(engine)
 
     # Process the file and insert data
-    # file_path = r'D:\Baldante\trans\Highrise_Backup_10_25_2024\highrise-export-01574-94849\contacts'
     file_path = r'D:\Baldante\highrise\data\Highrise_Backup_5_6_2024\Highrise_Backup_12_4_2024\highrise-export-01574-96183\contacts\45842.013.txt'
-    # file_path = r'D:\Baldante\highrise\data\Highrise_Backup_5_6_2024\Highrise_Backup_12_4_2024\highrise-export-01574-96183\contacts\Jared Thompson.txt'
-    # file_path = r'D:\Baldante\highrise-export-May03-CorinneMorgan\contacts\Kathleen (goes by Katie) Kiley (Ferriola).txt'
     process_file(file_path, engine)
 
-    # Connection will automatically close when script ends
+    options = {
+        'server': args.server,
+        'database': args.database,
+        'input': args.input
+    }
+
+    process_file(options)

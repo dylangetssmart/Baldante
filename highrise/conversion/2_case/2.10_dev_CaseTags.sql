@@ -9,6 +9,16 @@ CREATE TABLE conversion.ContactTags (
    ,tag NVARCHAR(255) NOT NULL
 );
 
+/*
+if STRING_SPLIT is invalid:
+
+SELECT compatibility_level
+FROM sys.databases
+WHERE name = 'BaldanteHighriseSA';
+
+ALTER DATABASE BaldanteHighriseSA SET COMPATIBILITY_LEVEL = 160;
+*/
+
 INSERT INTO conversion.ContactTags
 	(
 	contact_id
@@ -26,6 +36,8 @@ SELECT
 FROM conversion.ContactTags ct
 SELECT @@VERSION;
 
+delete from sma_MST_CaseTags
+
 -- Create tags
 INSERT INTO [dbo].[sma_MST_CaseTags]
 	(
@@ -37,7 +49,7 @@ INSERT INTO [dbo].[sma_MST_CaseTags]
    ,[ModifyUserID]
    ,[dDtModified]
 	)
-	SELECT
+	SELECT distinct
 		'Highrise' AS name
 	   ,0		   AS LimitTagGroups
 	   ,1		   AS IsActive
@@ -74,7 +86,9 @@ INSERT INTO [dbo].[sma_MST_CaseTags]
 	   ,GETDATE() AS dDtModified
 	FROM conversion.ContactTags ct
 GO
---SELECT * FROM sma_MST_CaseTags smct
+
+SELECT * FROM sma_MST_CaseTags smct
+SELECT * FROM sma_TRN_CaseTags stct
 
 -- Add tags to cases
 INSERT INTO [dbo].[sma_TRN_CaseTags]
@@ -93,9 +107,10 @@ INSERT INTO [dbo].[sma_TRN_CaseTags]
 	   ,GETDATE()
 	   ,NULL AS DeleteUserID
 	   ,NULL AS DtDeleted
-	FROM BaldanteSA.conversion.ContactTags ct
+	FROM BaldanteHighriseSA.conversion.ContactTags ct
 	JOIN sma_TRN_Cases stc
 		ON stc.cassCaseNumber = ct.contact_id
 	JOIN sma_MST_CaseTags smct
 		ON smct.Name = ct.Tag
 
+SELECT * FROM sma_TRN_CaseTags stct

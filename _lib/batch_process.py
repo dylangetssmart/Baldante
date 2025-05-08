@@ -1,11 +1,11 @@
 import os
 import logging
-from _lib.extract_txt import connect_to_sql_server, create_tables, process_file
+from _lib.extract_highrise import connect_to_sql_server, create_tables, process_file
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 def process_all_files(directory, engine):
-    # Iterate through all files in the specified directory
+    # Iterate through all files in the specified directory 
     for filename in os.listdir(directory):
         if filename.endswith('.txt'):
             file_path = os.path.join(directory, filename)
@@ -31,5 +31,3 @@ if __name__ == '__main__':
 
     # Process all .txt files in the directory
     process_all_files(directory, engine)
-
-    # Connection will automatically close when script ends
