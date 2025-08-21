@@ -1,4 +1,3 @@
-set QUOTED_IDENTIFIER on
 update sma_mst_sareports
 set
     ReportViewerURL = replace(
