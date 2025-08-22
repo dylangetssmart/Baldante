@@ -10,7 +10,7 @@ def load_yaml(file_path, console=None):
         with open(file_path, 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
     except yaml.YAMLError as exc:
-        logger.error(f"Error parsing YAML file {file_path}: {exc}")
+        logger.warning(f"Error parsing YAML file {file_path}: {exc}")
         if console:
-            console.print(f"[red]Error parsing YAML file {file_path}: {exc}[/red]")
+            console.print(f"[red]Error parsing YAML file {file_path}[/red]")
         return None

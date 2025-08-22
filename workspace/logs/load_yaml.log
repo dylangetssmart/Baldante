@@ -254,3 +254,259 @@ expected <block end>, but found '<block mapping start>'
   in "D:\Baldante\workspace\data\2025-08-21\contacts\Valeire McDermott.txt", line 19, column 3
 expected <block end>, but found '<block mapping start>'
   in "D:\Baldante\workspace\data\2025-08-21\contacts\Valeire McDermott.txt", line 22, column 5
+2025-08-22 15:06:33,695 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Austin Ashcroft, Jennifer OBO Bentzel.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Austin Ashcroft, Jennifer OBO Bentzel.txt", line 248, column 5
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Austin Ashcroft, Jennifer OBO Bentzel.txt", line 249, column 8
+2025-08-22 15:06:35,747 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Barry Vangarelli.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Barry Vangarelli.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Barry Vangarelli.txt", line 26, column 6
+2025-08-22 15:06:38,941 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Bernard Evans.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Bernard Evans.txt", line 26, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Bernard Evans.txt", line 27, column 6
+2025-08-22 15:07:04,295 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Calvin Roberts.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Calvin Roberts.txt", line 13, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Calvin Roberts.txt", line 13, column 11
+2025-08-22 15:07:07,033 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Carlos Acosta Jr.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Carlos Acosta Jr.txt", line 37, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Carlos Acosta Jr.txt", line 38, column 6
+2025-08-22 15:07:17,779 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Chad Stepp.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Chad Stepp.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Chad Stepp.txt", line 26, column 6
+2025-08-22 15:07:39,142 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Clarence Goodman, Jr.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Clarence Goodman, Jr.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Clarence Goodman, Jr.txt", line 22, column 6
+2025-08-22 15:07:45,646 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Corry Lyons.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Corry Lyons.txt", line 22, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Corry Lyons.txt", line 25, column 5
+2025-08-22 15:07:57,710 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Daniel Gallagher.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Daniel Gallagher.txt", line 29, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Daniel Gallagher.txt", line 30, column 6
+2025-08-22 15:08:11,089 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Darrin Taylor.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Darrin Taylor.txt", line 36, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Darrin Taylor.txt", line 37, column 6
+2025-08-22 15:08:11,630 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Darryl Johnson.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Darryl Johnson.txt", line 23, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Darryl Johnson.txt", line 24, column 6
+2025-08-22 15:08:19,656 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\David Rackley.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\David Rackley.txt", line 12, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\David Rackley.txt", line 12, column 11
+2025-08-22 15:08:39,657 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Diane Gabler.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Diane Gabler.txt", line 23, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Diane Gabler.txt", line 24, column 6
+2025-08-22 15:08:46,321 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Donna Rainforth.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Donna Rainforth.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Donna Rainforth.txt", line 22, column 6
+2025-08-22 15:08:59,935 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Edward Mahon.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Edward Mahon.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Edward Mahon.txt", line 22, column 6
+2025-08-22 15:09:18,427 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Eriq Miller.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Eriq Miller.txt", line 15, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Eriq Miller.txt", line 15, column 11
+2025-08-22 15:09:25,266 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Floyd Perkins, III.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Floyd Perkins, III.txt", line 15, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Floyd Perkins, III.txt", line 15, column 11
+2025-08-22 15:09:25,853 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Francis Dzwoniarek.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Francis Dzwoniarek.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Francis Dzwoniarek.txt", line 22, column 6
+2025-08-22 15:09:25,866 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Francis Eccles.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Francis Eccles.txt", line 22, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Francis Eccles.txt", line 23, column 6
+2025-08-22 15:09:30,733 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Frank _Raymond_ Selvey.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Frank _Raymond_ Selvey.txt", line 26, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Frank _Raymond_ Selvey.txt", line 27, column 6
+2025-08-22 15:09:56,516 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Harry Hines.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Harry Hines.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Harry Hines.txt", line 26, column 6
+2025-08-22 15:10:03,997 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Ignatius Danna.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Ignatius Danna.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Ignatius Danna.txt", line 22, column 6
+2025-08-22 15:10:05,520 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Irene Pabey.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Irene Pabey.txt", line 20, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Irene Pabey.txt", line 24, column 5
+2025-08-22 15:10:11,616 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Jack Parry.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jack Parry.txt", line 26, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jack Parry.txt", line 27, column 6
+2025-08-22 15:10:19,170 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\James (Jim) Cook.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\James (Jim) Cook.txt", line 17, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\James (Jim) Cook.txt", line 18, column 6
+2025-08-22 15:10:41,929 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Jeffrey A Kirk.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jeffrey A Kirk.txt", line 24, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jeffrey A Kirk.txt", line 25, column 6
+2025-08-22 15:10:51,755 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Jerry Yates-Elston.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jerry Yates-Elston.txt", line 12, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jerry Yates-Elston.txt", line 12, column 11
+2025-08-22 15:11:00,248 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\John Fagan.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Fagan.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Fagan.txt", line 22, column 6
+2025-08-22 15:11:04,982 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\John Lehneis.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Lehneis.txt", line 16, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Lehneis.txt", line 16, column 11
+2025-08-22 15:11:06,288 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\John Mccroy.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Mccroy.txt", line 27, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Mccroy.txt", line 28, column 6
+2025-08-22 15:11:10,794 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\John Sloss.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Sloss.txt", line 15, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\John Sloss.txt", line 16, column 6
+2025-08-22 15:11:13,780 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Jomar Almestica.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jomar Almestica.txt", line 25, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Jomar Almestica.txt", line 26, column 6
+2025-08-22 15:11:46,712 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Katherine Munoz.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Katherine Munoz.txt", line 26, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Katherine Munoz.txt", line 27, column 6
+2025-08-22 15:11:49,072 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Keisha Ashley.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Keisha Ashley.txt", line 20, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Keisha Ashley.txt", line 23, column 5
+2025-08-22 15:11:54,432 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Kenneth P Marinack.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kenneth P Marinack.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kenneth P Marinack.txt", line 26, column 6
+2025-08-22 15:12:06,964 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Khayyan Hill.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Khayyan Hill.txt", line 15, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Khayyan Hill.txt", line 16, column 6
+2025-08-22 15:12:09,498 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Kioara Lifhred.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kioara Lifhred.txt", line 20, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kioara Lifhred.txt", line 21, column 6
+2025-08-22 15:12:16,084 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Kyreem Fitzgerald.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kyreem Fitzgerald.txt", line 20, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Kyreem Fitzgerald.txt", line 21, column 6
+2025-08-22 15:12:50,109 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Mark Scott.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Mark Scott.txt", line 23, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Mark Scott.txt", line 24, column 6
+2025-08-22 15:12:54,768 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Marvin Miller.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Marvin Miller.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Marvin Miller.txt", line 26, column 6
+2025-08-22 15:12:55,322 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Mary Jo Potts.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Mary Jo Potts.txt", line 23, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Mary Jo Potts.txt", line 24, column 6
+2025-08-22 15:12:56,835 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Maryann Ortholf.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Maryann Ortholf.txt", line 22, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Maryann Ortholf.txt", line 23, column 6
+2025-08-22 15:13:05,722 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Melvin McLaughlin.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Melvin McLaughlin.txt", line 15, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Melvin McLaughlin.txt", line 15, column 11
+2025-08-22 15:13:20,907 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Michael Lopez.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Michael Lopez.txt", line 19, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Michael Lopez.txt", line 22, column 5
+2025-08-22 15:13:33,613 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Michelle Dunham.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Michelle Dunham.txt", line 20, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Michelle Dunham.txt", line 24, column 5
+2025-08-22 15:13:46,419 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Nathan Norcross.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Nathan Norcross.txt", line 15, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Nathan Norcross.txt", line 16, column 6
+2025-08-22 15:13:49,199 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Neeka Oneal.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Neeka Oneal.txt", line 24, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Neeka Oneal.txt", line 28, column 5
+2025-08-22 15:14:02,919 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Patricia Coleman.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Patricia Coleman.txt", line 26, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Patricia Coleman.txt", line 27, column 6
+2025-08-22 15:14:09,145 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Patrick Waterkotte.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Patrick Waterkotte.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Patrick Waterkotte.txt", line 22, column 6
+2025-08-22 15:14:11,519 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Paul McClain.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Paul McClain.txt", line 27, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Paul McClain.txt", line 28, column 6
+2025-08-22 15:14:16,599 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Peter Pollicino, deceased.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Peter Pollicino, deceased.txt", line 24, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Peter Pollicino, deceased.txt", line 25, column 6
+2025-08-22 15:14:32,465 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Dolney.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Dolney.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Dolney.txt", line 22, column 6
+2025-08-22 15:14:33,225 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Marino.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Marino.txt", line 25, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Raymond Marino.txt", line 26, column 6
+2025-08-22 15:14:36,745 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Reine Liquori.txt: while scanning a block scalar
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Reine Liquori.txt", line 16, column 9
+expected chomping or indentation indicators, but found '0'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Reine Liquori.txt", line 16, column 11
+2025-08-22 15:14:49,910 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Robert Jiggetts.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Robert Jiggetts.txt", line 22, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Robert Jiggetts.txt", line 23, column 6
+2025-08-22 15:14:54,451 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Robert Welsh.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Robert Welsh.txt", line 24, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Robert Welsh.txt", line 25, column 6
+2025-08-22 15:15:00,585 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Roneir Jackson.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Roneir Jackson.txt", line 21, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Roneir Jackson.txt", line 22, column 6
+2025-08-22 15:15:17,402 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Scotty Todd.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Scotty Todd.txt", line 19, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Scotty Todd.txt", line 20, column 6
+2025-08-22 15:15:20,731 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Selisa Miller.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Selisa Miller.txt", line 21, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Selisa Miller.txt", line 22, column 6
+2025-08-22 15:15:40,637 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Stephen Quinn.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Stephen Quinn.txt", line 23, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Stephen Quinn.txt", line 24, column 6
+2025-08-22 15:15:52,269 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Tarneathea Turner.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Tarneathea Turner.txt", line 19, column 3
+expected <block end>, but found '<scalar>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Tarneathea Turner.txt", line 20, column 6
+2025-08-22 15:15:58,383 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Theodore Holliman.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Theodore Holliman.txt", line 27, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Theodore Holliman.txt", line 28, column 6
+2025-08-22 15:16:04,783 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Thomas Shuler.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Thomas Shuler.txt", line 16, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Thomas Shuler.txt", line 17, column 6
+2025-08-22 15:16:27,125 - ERROR - load_yaml.py - load_yaml - 13 - Error parsing YAML file D:\Baldante\workspace\data\2025-08-21\contacts\Valeire McDermott.txt: while parsing a block mapping
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Valeire McDermott.txt", line 19, column 3
+expected <block end>, but found '<block mapping start>'
+  in "D:\Baldante\workspace\data\2025-08-21\contacts\Valeire McDermott.txt", line 22, column 5

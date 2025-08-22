@@ -57,10 +57,10 @@ def process_all_files(directory, engine):
             try:
                 if re.match(r'^\d', filename):
                     # File starts with a digit -> company
-                    extract_company(file_path, engine, logger=logger)
+                    extract_company(file_path, engine, logger=logger, progress=progress)
                 else:
                     # File is contact
-                    extract_contact(file_path, engine)
+                    extract_contact(file_path, engine, progress=progress)
             except Exception as e:
                 logger.error(f"Error processing {filename}: {e}")
 
