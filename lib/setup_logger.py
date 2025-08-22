@@ -3,7 +3,7 @@ import logging
 import os
 
 def setup_logger(name=__name__, log_file=None, level=logging.DEBUG):
-    logs_dir = "_logs"
+    logs_dir = "workspace\\logs"
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.propagate = False
@@ -12,8 +12,8 @@ def setup_logger(name=__name__, log_file=None, level=logging.DEBUG):
         os.makedirs(logs_dir, exist_ok=True)
 
         # File handler
-        file_handler = logging.FileHandler(os.path.join(logs_dir, log_file))
-        file_handler.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(os.path.join(logs_dir, log_file), encoding='utf-8')
+        file_handler.setLevel(logging.INFO)
         file_formatter = logging.Formatter(
             "%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)d - %(message)s"
         )
@@ -21,7 +21,8 @@ def setup_logger(name=__name__, log_file=None, level=logging.DEBUG):
 
         # Console handler
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
+        console_handler.setStream(open(console_handler.stream.fileno(), 'w', encoding='utf-8', closefd=False)) 
+        console_handler.setLevel(logging.ERROR)
         console_formatter = logging.Formatter(
             "%(levelname)s - %(filename)s - %(funcName)s - %(lineno)d - %(message)s"
         )

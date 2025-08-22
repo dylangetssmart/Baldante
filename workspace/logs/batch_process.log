@@ -1,0 +1,18 @@
+2025-08-22 14:14:05,702 - INFO - batch_process.py - process_all_files - 34 - Execution skipped for D:\Baldante\workspace\data\2025-08-21\contacts.
+2025-08-22 14:15:42,913 - INFO - batch_process.py - process_all_files - 34 - Execution skipped for D:\Baldante\workspace\data\2025-08-21\contacts.
+2025-08-22 14:38:09,233 - ERROR - batch_process.py - process_all_files - 65 - Error processing Camp Lejeune.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:38:36,778 - ERROR - batch_process.py - process_all_files - 65 - Error processing CLG.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:38:51,275 - ERROR - batch_process.py - process_all_files - 65 - Error processing Daniel Ellis.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:39:27,013 - ERROR - batch_process.py - process_all_files - 65 - Error processing Diana McDeown.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:39:27,013 - ERROR - batch_process.py - process_all_files - 65 - Error processing Diana McKeown.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:39:57,709 - ERROR - batch_process.py - process_all_files - 65 - Error processing EO.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:40:48,370 - ERROR - batch_process.py - process_all_files - 65 - Error processing Inmate at East Jersey State Prison - SBI Number_ 000467141E.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:40:52,040 - ERROR - batch_process.py - process_all_files - 65 - Error processing Ivan Gustafson.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:40:55,761 - ERROR - batch_process.py - process_all_files - 65 - Error processing Jahlon.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:42:44,361 - ERROR - batch_process.py - process_all_files - 65 - Error processing Khalid Satcher,.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:43:04,989 - ERROR - batch_process.py - process_all_files - 65 - Error processing Linda Em, on behalf of Anthony Joseph Em, Deceased.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:44:50,237 - ERROR - batch_process.py - process_all_files - 65 - Error processing Quran.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:45:03,390 - ERROR - batch_process.py - process_all_files - 65 - Error processing Referred by Jerrold Colton.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:46:01,925 - ERROR - batch_process.py - process_all_files - 65 - Error processing SSN_ 7382.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:46:22,286 - ERROR - batch_process.py - process_all_files - 65 - Error processing Tammond Hill.txt: cannot access local variable 'company_info' where it is not associated with a value
+2025-08-22 14:47:17,863 - ERROR - batch_process.py - process_all_files - 65 - Error processing WILLIAMS_DUVALL.txt: cannot access local variable 'company_info' where it is not associated with a value

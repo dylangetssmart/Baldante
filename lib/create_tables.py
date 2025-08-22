@@ -5,10 +5,13 @@ def create_tables(engine):
     metadata = MetaData()
 
     contacts_table = Table('contacts', metadata,
-        Column('ID', Integer, primary_key=True, autoincrement=False),
-        Column('Name', String),
-        Column('Tags', String),
-        Column('Background', String)
+        Column('id', Integer, primary_key=True, autoincrement=False),
+        Column('name', String),
+        Column('tags', String),
+        Column('company_id', String),
+        Column('company_name', String),
+        Column('background', String),
+        Column('filename', String),
     )
 
     phone_table = Table('phone', metadata,
@@ -27,10 +30,21 @@ def create_tables(engine):
     )
 
     notes_table = Table('notes', metadata,
-        Column('note_id', Integer),  # Assuming note_id can be a string
+        Column('id', Integer),  # Assuming note_id can be a string
         # Column('note_id', Integer, primary_key=True, autoincrement=False),  # Assuming note_id can be a string
-        Column('type', String),  # 'Note' or 'Task'
+        # Column('type', String),  # 'Note' or 'Task'
         Column('contact_id', Integer),  # Foreign key to 'contacts'
+        Column('company_id', Integer),  # Foreign key to 'company'
+        Column('author', String),
+        Column('written_date', String),  # You can change this to DateTime if you want to store actual dates
+        Column('about', String),
+        Column('body', String)
+    )
+
+    tasks_table = Table('tasks', metadata,
+        Column('id', Integer),  # Assuming note_id can be a string
+        Column('contact_id', Integer),  # Foreign key to 'contacts'
+        Column('company_id', Integer),  # Foreign key to 'company'
         Column('author', String),
         Column('written_date', String),  # You can change this to DateTime if you want to store actual dates
         Column('about', String),
@@ -39,3 +53,4 @@ def create_tables(engine):
 
     metadata.create_all(engine)
     logging.info(f"Tables created successfully: {metadata.tables.keys()}")
+    

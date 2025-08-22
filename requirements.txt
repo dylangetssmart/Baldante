@@ -1,0 +1,6 @@
+pyodbc
+sqlalchemy
+pandas
+openpyxl
+PyYAML
+rich
