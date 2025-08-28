@@ -17,5 +17,5 @@ slnx.sqlite
 /.vs/*
 /.vs/VSWorkspaceState.json
 
-# Ignore data directories
 workspace/data/*
+workspace/logs/*
