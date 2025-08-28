@@ -16,7 +16,7 @@
  *	dbo.Dworkin_LastName_FromText
  **************************************************/
 
-USE BaldanteHighriseSA
+USE [Baldante_SA_Highrise]
 GO
 
 -----

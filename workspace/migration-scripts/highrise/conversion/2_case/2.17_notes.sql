@@ -1,4 +1,4 @@
-USE BaldanteHighriseSA
+USE Baldante_SA_Highrise
 GO
 --delete from sma_TRN_Notes
 /*
@@ -106,15 +106,15 @@ INSERT INTO [sma_TRN_Notes]
 	   ,NULL	   AS [notdDtInserted]
 	   ,NULL	   AS [WorkPlanItemId]
 	   ,NULL	   AS [notnSubject]
-	   ,n.note_id  AS SAGA
-	FROM Baldante..notes n
+	   ,n.id AS SAGA
+	FROM Baldante_Highrise..notes n
 	--FROM TestNeedles.[dbo].[case_notes_Indexed] N
 	JOIN [sma_TRN_Cases] C
 		ON c.saga = n.contact_id
 	--LEFT JOIN [sma_MST_Users] U
 	--	ON U.saga = N.staff_id
 	LEFT JOIN [sma_TRN_Notes] ns
-		ON ns.saga = n.note_id
+		ON ns.saga = n.id
 	WHERE ns.notnNoteID IS NULL
 GO
 
