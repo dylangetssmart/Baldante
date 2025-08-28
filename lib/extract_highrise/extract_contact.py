@@ -1,22 +1,19 @@
-import os
 import logging
+
 # Highrise functions
 from .create_highrise_tables import create_tables
 from .parse_notes_tasks_emails import parse_notes_tasks_emails
-# Logging and utility functions
-from lib.logging.setup_logger import setup_logger
+
+# Utility functions
 from lib.utility.create_engine import main as create_engine
 from lib.utility.insert_sql import insert_to_sql_server
 from lib.utility.insert_helpers import insert_entities
 from lib.utility.load_yaml import load_yaml
+
 # External libraries
 from rich.console import Console
 
-
 logger = logging.getLogger(__name__)
-
-# script_name = os.path.splitext(os.path.basename(__file__))[0]
-# logger = setup_logger(__name__, log_file=f"{script_name}.log")
 console = Console()
 
 def parse_contact_header(data, file_path):
@@ -50,6 +47,7 @@ def parse_contact_header(data, file_path):
         'background': background,
         'filename': file_path.split('\\')[-1]  # Extract the file name from the path
     }
+    logger.debug(f"Parsed contact header: {contact_data}")
     return contact_data
 
 
@@ -58,7 +56,6 @@ def parse_contact_info(data, contact_id, engine, file_path, progress=None):
         contact_info = data[2]['Contact']
         phone_numbers = []
         email_addresses = []
-        addresses = []
 
         for item in contact_info:
             # Phone numbers ----------------------------------------------------
@@ -71,8 +68,8 @@ def parse_contact_info(data, contact_id, engine, file_path, progress=None):
                     }
 
                     try:
-                        insert_to_sql_server(file_path, engine, 'phone', phone_data)
-                        # logger.debug(f"Inserted Phone record: {phone_data}")
+                        insert_to_sql_server(file_path, engine, 'phone', phone_data, console=progress.console if progress else None)
+                        logger.debug(f"Inserted Phone record: {phone_data}")
                     except Exception as e:
                         logger.error(f"FAIL: insert phone {phone_number} from {file_path}: {e}")
                         
@@ -90,8 +87,8 @@ def parse_contact_info(data, contact_id, engine, file_path, progress=None):
                     }
 
                     try:
-                        insert_to_sql_server(file_path, engine, 'email', email_data)
-                        # logger.debug(f"Inserted Email record: {email_data}")
+                        insert_to_sql_server(file_path, engine, 'email', email_data, console=progress.console if progress else None)
+                        logger.debug(f"Inserted Email record: {email_data}")
                     except Exception as e:
                         logger.error(f"FAIL: insert email {email_address} from {file_path}: {e}")
                         
@@ -115,8 +112,8 @@ def parse_contact_info(data, contact_id, engine, file_path, progress=None):
                     }
                 
                     try:
-                        insert_to_sql_server(file_path, engine, 'address', address_data)
-                        # logger.debug(f"Inserted Address record: {address_data}")
+                        insert_to_sql_server(file_path, engine, 'address', address_data, console=progress.console if progress else None)
+                        logger.debug(f"Inserted Address record: {address_data}")
                     except Exception as e:
                         logger.error(f"FAIL: insert address {formatted_address} from {file_path}: {e}")
                         
@@ -126,13 +123,14 @@ def parse_contact_info(data, contact_id, engine, file_path, progress=None):
 
 def extract_contact(file_path, engine, progress=None):
     
+    logger.debug(f"Processing contact file: {file_path}")
     data = load_yaml(file_path, console=progress.console if progress else None)
     if not data:
         return 
 
     # Contact Header
     contact_data = parse_contact_header(data, file_path)
-    insert_to_sql_server(file_path, engine, 'contacts', contact_data)
+    insert_to_sql_server(file_path, engine, 'contacts', contact_data, console=progress.console if progress else None)
 
     # Contact Information
     parse_contact_info(data, contact_data['id'], engine, file_path, progress)
@@ -144,44 +142,9 @@ def extract_contact(file_path, engine, progress=None):
     insert_entities(file_path, engine, tasks, "tasks", "task", contact_data['id'], progress)
     insert_entities(file_path, engine, emails, "emails", "email", contact_data['id'], progress)
 
-    # for note in notes:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'notes', note)
-    #         logger.info(f"Inserted note ID {note['id']} for contact ID {contact_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert note ID {note['id']} from {file_path}: {e}")
-            
-    #         if progress:
-    #             progress.console.print(f"[red]Note insert failed: {file_path}: {e}[/red]")
-
-    # for task in tasks:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'tasks', task)
-    #         logger.info(f"Inserted task ID {task['id']} for contact ID {contact_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert task ID {task['id']} from {file_path}: {e}")
-            
-    #         if progress:
-    #             progress.console.print(f"[red]Task insert failed: {file_path}: {e}[/red]")
-
-    # for email in emails:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'emails', email)
-    #         logger.info(f"Inserted email ID {email['id']} for contact ID {contact_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert email ID {email['id']} from {file_path}: {e}")
-            
-    #         if progress:
-    #             progress.console.print(f"[red]Email insert failed: {file_path}: {e}[/red]")
 
 if __name__ == '__main__':
-    # Define connection details to your SQL Server
-    # server = r'dylans\mssqlserver2022'
-    # database = 'Baldante'
-    # username = 'dsmith'
-    # password = 'SAconversion@2024'
-    
-    """CLI entry point"""
+   
     import argparse
     parser = argparse.ArgumentParser(description="Process SQL files and save results to an Excel file.")
     parser.add_argument("-s", "--server", required=True, help="SQL Server")
@@ -191,17 +154,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     engine = create_engine(server=args.server, database=args.database)
 
-    # Create tables
     create_tables(engine)
-
-    # Process the file and insert data
-    # file_path = r'D:\Baldante\highrise\data\Highrise_Backup_5_6_2024\Highrise_Backup_12_4_2024\highrise-export-01574-96183\contacts\45842.013.txt'
-    # extract_contact(file_path, engine)
-
-    # options = {
-    #     'server': args.server,
-    #     'database': args.database,
-    #     'input': args.input
-    # }
 
     extract_contact(args.input, engine, progress=None)

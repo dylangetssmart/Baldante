@@ -1,11 +1,13 @@
 import os
 import logging
+
 # Highrise functions
 from .parse_notes_tasks_emails import parse_notes_tasks_emails
+
 # Logging and utility functions
 from lib.utility.insert_sql import insert_to_sql_server
 from lib.utility.insert_helpers import insert_entities
-from ..utility.load_yaml import load_yaml
+from lib.utility.load_yaml import load_yaml
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +31,8 @@ def extract_company(file_path, engine, progress=None):
     }
 
     try:
-        insert_to_sql_server(file_path, engine, "company", company_data)
-        # logger.debug(f"Inserted company: {company_data['name']}")
+        insert_to_sql_server(file_path, engine, "company", company_data, console=progress.console if progress else None)
+        logger.debug(f"Inserted company: {company_data['name']}")
     except Exception as e:
         logger.error(f"FAIL: insert company from {file_path}: {e}")
         
@@ -43,33 +45,3 @@ def extract_company(file_path, engine, progress=None):
     insert_entities(file_path, engine, notes, "notes", "note", company_data['id'], progress)
     insert_entities(file_path, engine, tasks, "tasks", "task", company_data['id'], progress)
     insert_entities(file_path, engine, emails, "emails", "email", company_data['id'], progress)
-
-    # for note in notes:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'notes', note)
-    #         logger.debug(f"Inserted note ID {note['id']} for company ID {company_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert note ID {note['id']} from {file_path}: {e}")
-
-    #         if progress:
-    #             progress.console.print(f"[red]Note insert failed: {file_path}: {e}[/red]")
-
-    # for task in tasks:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'tasks', task)
-    #         logger.debug(f"Inserted task ID {task['id']} for company ID {company_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert task ID {task['id']} from {file_path}: {e}")
-
-    #         if progress:
-    #             progress.console.print(f"[red]Task insert failed: {file_path}: {e}[/red]")
-
-    # for email in emails:
-    #     try:
-    #         insert_to_sql_server(file_path, engine, 'emails', email)
-    #         logger.debug(f"Inserted email ID {email['id']} for company ID {company_data['id']}")
-    #     except Exception as e:
-    #         logger.error(f"FAIL: insert email ID {email['id']} from {file_path}: {e}")
-            
-    #         if progress:
-    #             progress.console.print(f"[red]Email insert failed: {file_path}: {e}[/red]")

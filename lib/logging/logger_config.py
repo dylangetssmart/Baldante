@@ -12,7 +12,7 @@ class RichHandler(logging.Handler):
         msg = self.format(record)
         self.console.print(msg)  # Progress-safe
 
-def setup_logger(name=__name__, log_file=None, level=logging.INFO, rich_console: Console = None):
+def logger_config(name=__name__, log_file=None, level=logging.INFO, rich_console: Console = None):
     """Setup logger with file logging always, and optional Rich console logging."""
     logs_dir = "workspace\\logs"
     os.makedirs(logs_dir, exist_ok=True)
@@ -22,14 +22,14 @@ def setup_logger(name=__name__, log_file=None, level=logging.INFO, rich_console:
     
     logger = logging.getLogger(name)
     logger.setLevel(level)
-    logger.propagate = False
+    # logger.propagate = False
 
     if not logger.handlers:
         # File handler (always)
         file_handler = logging.FileHandler(os.path.join(logs_dir, log_file), encoding='utf-8')
         file_handler.setLevel(logging.INFO)
         file_formatter = logging.Formatter(
-            "%(levelname)s | %(asctime)s | %(name)s.%(funcName)s:%(lineno)s | %(message)s",
+            "%(levelname)s | %(name)s.%(funcName)s:%(lineno)s | %(asctime)s | %(message)s",
             datefmt="%Y-%m-%dT%H:%M:%SZ"
         )
         file_handler.setFormatter(file_formatter)

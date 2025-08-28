@@ -1,7 +1,7 @@
 from datetime import datetime
-from lib.logging.setup_logger import setup_logger
+import logging
 
-logger = setup_logger(__name__, log_file="process_date.log")    
+logger = logging.getLogger(__name__)
 
 def process_date(date_string):
     """ Convert date string to SQL Server compatible format """

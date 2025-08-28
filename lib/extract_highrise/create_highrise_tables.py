@@ -1,6 +1,8 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 import logging
 
+logger = logging.getLogger(__name__)
+
 def create_tables(engine):
     metadata = MetaData()
 
