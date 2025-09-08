@@ -11,7 +11,7 @@ dependencies:
   -
 ---*/
 
-use [Baldante_SA_Highrise]
+use SABaldantePracticeMasterConversion
 go
 
 CREATE PROCEDURE AddBreadcrumbsToTable

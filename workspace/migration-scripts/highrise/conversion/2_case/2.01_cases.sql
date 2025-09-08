@@ -13,11 +13,33 @@ notes:
 	-
 */
 
-use BaldanteHighriseSA
+use SABaldantePracticeMasterConversion
 go
 
+---
 alter table [sma_TRN_Cases] disable trigger all
 go
+
+exec AddBreadcrumbsToTable 
+	@tableName = N'sma_TRN_Cases'
+
+go
+---
+
+-- =============================================
+-- Author:      PWLAW\dsmith
+-- Create date: 2025-09-05 10:34:56
+-- Database:    SABaldantePracticeMasterConversion
+-- Description: 
+-- =============================================
+
+/*
+For contacts with company_id <> null, find the Tabs case (case number = company_name)
+
+
+*/
+
+
 
 insert into [sma_TRN_Cases]
 	(

@@ -1,18 +1,3 @@
-/* ###################################################################################
-description: Handles common operations related to [sma_MST_IndvContacts]
-steps:
-	- update [sma_TRN_Cases] schema
-	- Create [conversion].[office]
-	- Insert [sma_mst_offices]
-usage_instructions:
-	- update values for [conversion].[office]
-dependencies:
-	- 
-notes:
-	-
-*/
-
-
 use BaldanteHighriseSA
 go
 

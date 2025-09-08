@@ -29,3 +29,35 @@ pip install -r requirements.txt
 - select * from Baldante..company
 - select * from Baldante..notes
 - select * from Baldante..tasks
+
+
+
+
+
+company = case number
+contacts w no company, create contact and either
+a) enter notes into contact
+b) create case, insert notes/emails/tasks
+
+
+
+contacts with company_name, find the tabs case (company_Name = cassnum)
+insert notes/tasks/emails
+
+
+contacts without company_name, client must decide create cases or just update the contact
+insert notes/tasks/emails
+
+
+users - get distinct authors, MATCH on loginid
+
+give tanya distinct lsit of authors from notes/emails/tasks
+
+
+contacts:
+match on name, UPDATE info
+non-matches, insert contacts and info
+
+
+
+author_map.sql

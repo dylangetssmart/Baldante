@@ -21,7 +21,7 @@ def create_tables(engine):
         Column('phone_number', String)
     )
 
-    email_address_table = Table('email', metadata,
+    email_address_table = Table('email_address', metadata,
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
         Column('email_address', String)
     )
