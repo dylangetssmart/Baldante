@@ -2,10 +2,7 @@
 -- Author:      PWLAW\dsmith
 -- Create date: 2025-09-05 10:34:56
 -- Database:    SABaldantePracticeMasterConversion
--- Description: 
-
-For contacts with company_id <> null, find the Tabs case (case number = company_name)
-
+-- Description: Insert notes into cases
 -- ============================================= */
 
 use SABaldantePracticeMasterConversion
@@ -17,20 +14,11 @@ go
 
 exec AddBreadcrumbsToTable
 	@tableName = N'sma_TRN_TaskNew'
-
 go
 
 ---
 
 
---select
---	stc.casnCaseID, stc.cassCaseNumber, c.*
---from Baldante_Highrise..contacts c
---join SABaldantePracticeMasterConversion..sma_TRN_Cases stc
---	on stc.cassCaseNumber = c.company_name
-
-
--- [4.3] Create tasks from [Task]
 insert into [sma_TRN_TaskNew]
 	(
 		[tskCaseID],
@@ -61,14 +49,17 @@ insert into [sma_TRN_TaskNew]
 		null			as [tskstartdate],
 		null			as [tskcompleteddt],
 		null			as [tskrequestorid],
-		null			as [tskassigneeid],
-		-- t.author		as [tskassigneeid],
+		iu.SAusrnUserID as [tskassigneeid],
 		null			as [tskreminderdays],
 		ISNULL(NULLIF(CONVERT(VARCHAR(MAX), t.body), '') + CHAR(13), '') +
 		''				as [tskdescription],
-		GETDATE()		as [tskcreateddt],
-		368				as tskcreateduserid,
-		--t.author		as tskcreateduserid,
+		case
+			when ISDATE(t.written_date) = 1 and
+				t.written_date between '1/1/1900' and '6/6/2079'
+				then t.written_date
+			else null
+		end				as [tskcreateddt],
+		iu.SAusrnUserID as tskcreateduserid,
 		null			as [tskmodifieddt],
 		null			as [tskmodifyuserid],
 		(
@@ -88,7 +79,7 @@ insert into [sma_TRN_TaskNew]
 		0				as [tskcompleted], -- Not Started
 		t.id			as [saga],
 		null			as [source_id],
-		'highrise'		as [source_db],
+		'HR'		as [source_db],
 		'tasks'			as [source_ref]
 	--SELECT *
 	from Baldante_Highrise..contacts c
@@ -96,6 +87,9 @@ insert into [sma_TRN_TaskNew]
 		on t.contact_id = c.id
 	join SABaldantePracticeMasterConversion..sma_TRN_Cases stc
 		on stc.cassCaseNumber = c.company_name
+	join SABaldantePracticeMasterConversion..implementation_users iu
+		on iu.Staff = t.author
+			and iu.Syst = 'HR'
 go
 
 

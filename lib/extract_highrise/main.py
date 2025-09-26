@@ -15,6 +15,10 @@ from rich.console import Console
 
 console = Console()
 
+# Global logger config at the top-level
+script_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logger_config(name=script_name, log_file=f"{script_name}.log", level=logging.INFO)
+
 def main(directory, engine, console):
 
     # logger = logger_config(__name__, log_file="extract_highrise.log", rich_console=console)

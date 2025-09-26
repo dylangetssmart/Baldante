@@ -17,22 +17,25 @@ def create_tables(engine):
     )
 
     phone_table = Table('phone', metadata,
+        Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
         Column('phone_number', String)
     )
 
     email_address_table = Table('email_address', metadata,
+        Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
         Column('email_address', String)
     )
 
     address_table = Table('address', metadata,
+        Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Add foreign key to 'contacts'
         Column('address', String)
     )
 
     notes_table = Table('notes', metadata,
-        Column('id', Integer),  # Assuming note_id can be a string
+        Column('id', Integer, primary_key=True, autoincrement=False),
         # Column('note_id', Integer, primary_key=True, autoincrement=False),  # Assuming note_id can be a string
         # Column('type', String),  # 'Note' or 'Task'
         Column('contact_id', Integer),  # Foreign key to 'contacts'
@@ -44,7 +47,7 @@ def create_tables(engine):
     )
 
     tasks_table = Table('tasks', metadata,
-        Column('id', Integer),  # Assuming note_id can be a string
+        Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Foreign key to 'contacts'
         Column('company_id', Integer),  # Foreign key to 'company'
         Column('author', String),
@@ -54,7 +57,7 @@ def create_tables(engine):
     )
 
     emails_table = Table('emails', metadata,
-        Column('id', Integer),  # Assuming note_id can be a string
+        Column('id', Integer, primary_key=True, autoincrement=False),
         Column('contact_id', Integer),  # Foreign key to 'contacts'
         Column('company_id', Integer),  # Foreign key to 'company'
         Column('author', String),

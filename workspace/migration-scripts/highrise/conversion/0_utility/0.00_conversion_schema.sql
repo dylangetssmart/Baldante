@@ -1,4 +1,4 @@
-use [Baldante_SA_Highrise]
+use SABaldantePracticeMasterConversion
 go
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'conversion')
