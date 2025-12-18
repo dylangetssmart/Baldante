@@ -28,9 +28,12 @@ pip install -r requirements.txt
 ## Data Structure
 Highrise data: `D:\Baldante\data\2025-08-21\contacts`
 
-- Filenames containing actual names are **Contacts.**
-- Numeric filenames are **Companies**.
+- Filenames containing actual names are **Contacts:**
+	- 
+- Numeric filenames are **Companies:**.
+	- 
 - **Company** files contain Notes, Tasks, and Emails about the related **Contact.**
+
 
 `[company].[id] <--> [contact].[company].[id]`
 
