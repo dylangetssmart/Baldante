@@ -6,7 +6,7 @@ go
 Insert [sma_MST_IndvContacts] from Highrise that don't exist (match on name)
 */ ------------------------------------------------------------------------------
 exec AddBreadcrumbsToTable 'sma_MST_IndvContacts'
-alter table [sma_MST_IndvContacts] alter column saga INT
+--alter table [sma_MST_IndvContacts] alter column saga INT
 go
 
 alter table [sma_MST_IndvContacts] disable trigger all
@@ -39,6 +39,7 @@ insert into [sma_MST_IndvContacts]
 		[cinsOtherLanguage],
 		[cinnRace],
 		[saga],
+		[source_id],
 		[source_db],
 		[source_ref]
 	)
@@ -80,7 +81,8 @@ insert into [sma_MST_IndvContacts]
 		null								 as [cinsPrimaryLanguage],
 		null								 as [cinsOtherLanguage],
 		null								 as [cinnrace],
-		c.id								 as [saga],
+		null								 as [saga],
+		c.id								 as [source_id],
 		'highrise'							 as [source_db],
 		'contacts'							 as [source_ref]
 	--select c.*, ioci.*
@@ -179,8 +181,8 @@ insert into [sma_MST_Address]
 		null,
 		null,
 		null,
-		a.id				  as saga,
-		null				  as source_id,
+		null				  as saga,
+		a.id				  as source_id,
 		'highrise'			  as source_db,
 		'address'			  as source_ref
 	from Baldante_Highrise..address a
@@ -308,8 +310,8 @@ insert into [sma_MST_ContactNumbers]
 		GETDATE()								  as cnnddtmodified,
 		null									  as cnnnlevelno,
 		null									  as caseno,
-		p.id									  as saga,
-		null									  as source_id,
+		null									  as saga,
+		p.id									  as source_id,
 		'highrise'								  as source_db,
 		'phone'									  as source_ref
 	from Baldante_Highrise..phone as p
@@ -387,8 +389,8 @@ insert into [sma_MST_EmailWebsite]
 		368					as cewnmodifyuserid,
 		GETDATE()			as cewddtmodified,
 		null				as cewnlevelno,
-		e.id				as saga,
-		null				as source_id,
+		null				as saga,
+		e.id				as source_id,
 		'highrise'			as source_db,
 		'email_address'		as source_ref
 	from Baldante_Highrise..email_address as e

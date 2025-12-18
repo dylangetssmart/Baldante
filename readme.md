@@ -1,7 +1,6 @@
 # Baldante Highrise
 
-## db connection
-
+```sql
 drop table Baldante_Highrise..phone
 drop table Baldante_Highrise..address
 drop table Baldante_Highrise..email_address
@@ -11,6 +10,7 @@ drop table Baldante_Highrise..notes
 drop table Baldante_Highrise..tasks
 drop table Baldante_Highrise..contacts
 drop table Baldante_Highrise..company
+```
 
 `Data Source=dylans\mssqlserver2022; Initial Catalog=Baldante_Consolidated; User Id =sa; Password=Int3gra!1; Connection Timeout=10000`
 
@@ -28,16 +28,40 @@ pip install -r requirements.txt
 ## Data Structure
 Highrise data: `D:\Baldante\data\2025-08-21\contacts`
 
-- Filenames containing actual names are **Contacts:**
-	- 
-- Numeric filenames are **Companies:**.
-	- 
-- **Company** files contain Notes, Tasks, and Emails about the related **Contact.**
+**Contacts** - Filenames contain actual names: `Mitchell Morris.txt`
+- Name
+- Tags
+- Background
+- Address
+- Email Address
+- Phone Numbers
+- Notes
+- Emails _(unconfirmed but 99%)_
+- Tasks _(unconfirmed but 99%)_
+
+**Company** - Filenames are numeric: `45985.578.txt`
+- Name
+- Tags
+- Background
+- Address
+- Email Address
+- Phone Numbers
+- Notes
+- Emails _(unconfirmed but 99%)_
+- Tasks _(unconfirmed but 99%)_
+
+
+
+
+![alt text](image.png)
 
 
 `[company].[id] <--> [contact].[company].[id]`
 
 
+
+
+**_email relationship_**
 ![alt text](<company to contact relationship.png>)
 
 - [ ] Find existing Tabs3 cases and add notes, tasks, emails to them from the highrise data
@@ -55,6 +79,10 @@ py -m highrise.parse_data.main -s dylans\mssqlserver2022 -d baldante_highrise -i
 
 ### Run migration scripts: 
 `D:\Baldante\highrise\3_conversion`
+
+```bash
+sami run -f D:\Baldante\highrise\conversion -s dylans\mssqlserver2022 -d baldante_consolidated
+```
 
 
 **Contacts**
@@ -100,23 +128,10 @@ b) create case, insert notes/emails/tasks
 contacts with company_name, find the tabs case (company_Name = cassnum)
 insert notes/tasks/emails
 
-
-contacts without company_name, client must decide create cases or just update the contact
+contacts without company_name, create cases
 insert notes/tasks/emails
 
 
-users - get distinct authors, MATCH on loginid
-
-give tanya distinct lsit of authors from notes/emails/tasks
-
-
-contacts:
-match on name, UPDATE info
-non-matches, insert contacts and info
-
-
-
-author_map.sql
 
 
 
