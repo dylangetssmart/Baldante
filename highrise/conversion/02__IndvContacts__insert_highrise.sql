@@ -189,7 +189,7 @@ insert into [sma_MST_Address]
 	join Baldante_Highrise..contacts c
 		on c.id = a.contact_id
 	join sma_MST_IndvContacts indv
-		on c.id = indv.saga
+		on c.id = indv.source_id
 			and indv.[source_db] = 'highrise'
 			and indv.[source_ref] = 'contacts'
 	join [sma_MST_AddressTypes] as t
@@ -316,7 +316,7 @@ insert into [sma_MST_ContactNumbers]
 		'phone'									  as source_ref
 	from Baldante_Highrise..phone as p
 	join [sma_MST_IndvContacts] as indv
-		on indv.saga = p.contact_id
+		on indv.source_id = p.contact_id
 			and indv.[source_db] = 'highrise'
 			and indv.[source_ref] = 'contacts'
 	join [sma_MST_Address] as a
@@ -395,7 +395,7 @@ insert into [sma_MST_EmailWebsite]
 		'email_address'		as source_ref
 	from Baldante_Highrise..email_address as e
 	join [sma_MST_IndvContacts] as indv
-		on indv.saga = e.contact_id
+		on indv.source_id = e.contact_id
 			and indv.[source_db] = 'highrise'
 			and indv.[source_ref] = 'contacts'
 	where

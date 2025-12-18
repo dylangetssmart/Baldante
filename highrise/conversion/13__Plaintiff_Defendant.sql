@@ -2,8 +2,6 @@ use Baldante_Consolidated
 go
 
 ---
-exec AddBreadcrumbsToTable 'sma_TRN_Plaintiff'
-go
 
 ---- saga_party
 --if not exists (
@@ -23,6 +21,7 @@ go
 -------------------------------------------------------------------------------
 -- Insert [sma_TRN_Plaintiff]
 -------------------------------------------------------------------------------
+exec AddBreadcrumbsToTable 'sma_TRN_Plaintiff'
 alter table [sma_TRN_Plaintiff] disable trigger all
 go
 
@@ -240,6 +239,78 @@ go
 alter table [sma_TRN_Plaintiff] enable trigger all
 go
 
+
+-------------------------------------------------------------------------------
+alter table [sma_TRN_Defendants] disable trigger all
+go
+
+
+-- Every case need at least one defendant
+insert into [sma_TRN_Defendants]
+	(
+		[defnCaseID],
+		[defnContactCtgID],
+		[defnContactID],
+		[defnAddressID],
+		[defnSubRole],
+		[defbIsPrimary],
+		[defbCounterClaim],
+		[defbThirdParty],
+		[defsThirdPartyRole],
+		[defnPriority],
+		[defdFrmDt],
+		[defdToDt],
+		[defnRecUserID],
+		[defdDtCreated],
+		[defnModifyUserID],
+		[defdDtModified],
+		[defnLevelNo],
+		[defsMarked],
+		[saga]
+	)
+	select
+		casnCaseID as [defncaseid],
+		1		   as [defncontactctgid],
+		(
+		 select
+			 cinncontactid
+		 from sma_MST_IndvContacts
+		 where cinsFirstName = 'Defendant'
+			 and cinsLastName = 'Unidentified'
+		)		   as [defncontactid],
+		null	   as [defnaddressid],
+		(
+		 select
+			 sbrnSubRoleId
+		 from sma_MST_SubRole s
+		 inner join sma_MST_SubRoleCode c
+			 on c.srcnCodeId = s.sbrnTypeCode
+			 and c.srcsDscrptn = '(D)-Default Role'
+		 where s.sbrnCaseTypeID = cas.casnOrgCaseTypeID
+		)		   as [defnsubrole],
+		1		   as [defbisprimary],-- reexamine??
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		368		   as [defnrecuserid],
+		GETDATE()  as [defddtcreated],
+		368		   as [defnmodifyuserid],
+		GETDATE()  as [defddtmodified],
+		null,
+		null,
+		null
+	from sma_trn_cases cas
+	left join [sma_TRN_Defendants] d
+		on d.defncaseid = cas.casnCaseID
+	where
+		d.defncaseid is null
+go
+
+alter table [sma_TRN_Defendants] enable trigger all
+go
 /* ------------------------------------------------------------------------------
 Plaintiff Death
 */ ------------------------------------------------------------------------------

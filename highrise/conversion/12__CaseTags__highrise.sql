@@ -3,19 +3,19 @@ go
 
 
 -- Set compatibility level for STRING_SPLIT, if not already set.
-declare @compatibility_level INT;
-select
-	@compatibility_level = compatibility_level
-from sys.databases
-where
-	name = 'SABaldantePracticeMasterConversion';
+--declare @compatibility_level INT;
+--select
+--	@compatibility_level = compatibility_level
+--from sys.databases
+--where
+--	name = 'SABaldantePracticeMasterConversion';
 
-if @compatibility_level < 130
-begin
-	alter database SABaldantePracticeMasterConversion set compatibility_level = 160;
-end
+--if @compatibility_level < 130
+--begin
+--	alter database SABaldantePracticeMasterConversion set compatibility_level = 160;
+--end
 
-go
+--go
 
 
 /* ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ insert into sma_MST_CaseTags
 		GETDATE()	   as dDtModified,
 		null		   as [source_id],
 		'highrise'	   as [source_db],
-		null		   as [source_ref]
+		'contacts'	   as [source_ref]
 	from Baldante_Highrise..contacts c
 	cross apply STRING_SPLIT(c.tags, ',') ss
 	where

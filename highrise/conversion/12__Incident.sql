@@ -50,6 +50,7 @@ insert into [sma_TRN_Incidents]
 	from Baldante_Highrise..contacts c
 	join [sma_TRN_cases] cas
 		on cas.source_id = CONVERT(VARCHAR, c.id)
+		and cas.source_db = 'highrise'
 go
 
 alter table [sma_TRN_Incidents] enable trigger all

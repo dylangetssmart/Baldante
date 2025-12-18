@@ -258,6 +258,7 @@ with
 		 from Baldante_Highrise..contacts c
 		 left join sma_TRN_Cases cas
 			 on cas.cassCaseNumber = c.company_name
+			 and cas.source_db = 'Tabs3'
 		 where cas.casnCaseID is null
 
 		 union all
@@ -269,6 +270,7 @@ with
 		 from Baldante_Highrise..company com
 		 left join sma_TRN_Cases cas
 			 on cas.cassCaseNumber = com.name
+			 and cas.source_db = 'Tabs3'
 		 where cas.casnCaseID is null
 		)
 
@@ -347,7 +349,7 @@ insert into [sma_TRN_Cases]
 		-- from [sma_MST_States]
 		-- where [sttsDescription] = (select StateName from conversion.office)
 		--)			   as casnstate,
-		null					as casnstate,
+		2						as casnstate,
 		GETDATE()				as casdstatusfromdt,
 		(
 		 select
@@ -458,7 +460,7 @@ from Baldante_Highrise..contacts c
 where
 	ISNULL(c.company_name, '') = ''
 
-SELECT * FROM #update_case_numbers
+select * from #update_case_numbers
 
 update cas
 set cassCaseNumber = RIGHT('00000' + CAST(rowID as VARCHAR(5)), 5)
