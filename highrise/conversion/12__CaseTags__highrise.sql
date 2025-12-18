@@ -24,6 +24,29 @@ Insert [sma_MST_CaseTags]
 exec AddBreadcrumbsToTable 'sma_MST_CaseTags'
 go
 
+-- Create 'Highrise' case tag
+if not exists (select 1 from dbo.sma_MST_CaseTags where [Name] = 'Highrise')
+begin
+	insert into dbo.sma_MST_CaseTags
+		(
+			[Name],
+			[LimitTagGroups],
+			[IsActive],
+			[CreateUserID],
+			[DtCreated],
+			[ModifyUserID],
+			[dDtModified],
+			[source_id],
+			[source_db],
+			[source_ref]
+		)
+		values
+				('Highrise', 0, 1, 368, GETDATE(), 368, GETDATE(), null, 'highrise', null);
+end;
+
+go
+
+-- Create case tags from [contact].[tags]
 insert into sma_MST_CaseTags
 	(
 		[Name],
@@ -101,6 +124,52 @@ insert into sma_TRN_CaseTags
 	where
 		ISNULL(c.tags, '') <> '';
 go
+
+-- Insert 'Highrise' tag per case
+exec AddBreadcrumbsToTable 'sma_TRN_CaseTags';
+alter table sma_TRN_CaseTags disable trigger all;
+go
+
+insert into sma_TRN_CaseTags
+	(
+		[CaseID],
+		[TagID],
+		[CreateUserID],
+		[DtCreated],
+		[DeleteUserID],
+		[DtDeleted],
+		[source_id],
+		[source_db],
+		[source_ref]
+	)
+	select
+		cas.casnCaseID as CaseID,
+		t.TagID		   as TagID,
+		368			   as CreateUserID,
+		GETDATE()	   as DtCreated,
+		null		   as DeleteUserID,
+		null		   as DtDeleted,
+		cas.source_id  as source_id,
+		'highrise'	   as source_db,
+		null		   as source_ref
+	from sma_TRN_Cases cas
+	join dbo.sma_MST_CaseTags t
+		on t.Name = 'Highrise'
+	where
+		cas.source_db = 'highrise'
+		and
+		not exists (
+		 select
+			 1
+		 from sma_TRN_CaseTags ct
+		 where ct.CaseID = cas.casnCaseID
+			 and ct.TagID = t.TagID
+		);
+go
+
+alter table dbo.sma_TRN_CaseTags enable trigger all;
+go
+
 
 alter table dbo.sma_TRN_CaseTags enable trigger all;
 go
