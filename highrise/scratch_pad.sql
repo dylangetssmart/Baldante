@@ -15,7 +15,7 @@ SELECT * FROM Baldante_Highrise..notes
 
 
 SELECT * FROM Baldante_Consolidated..sma_TRN_Cases stc where stc.source_db = 'highrise'
-delete FROM Baldante_Consolidated..sma_TRN_Cases where source_db = 'highrise'
+--delete FROM Baldante_Consolidated..sma_TRN_Cases where source_db = 'highrise'
 
 -- how many contacts have emails?
 select count(*) FROM Baldante_Highrise..contacts c
@@ -52,6 +52,7 @@ SELECT * FROM Baldante_Highrise..company c where id = 343620943
 SELECT * FROM Baldante_Highrise..company c where id = 341408048
 SELECT * FROM Baldante_Highrise..contacts c where c.company_id = 341408048
 
+SELECT * FROM Baldante_Consolidated..sma_TRN_Plaintiff stp where stp.plnnCaseID=43128
 
 
 SELECT * FROM Baldante_Consolidated..sma_MST_CaseType smct

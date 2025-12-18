@@ -21,14 +21,14 @@ py -m venv .venv
 ```
 2. Activate the virtual environment and install dependencies from `requirements.txt`
 ```bash
-.\.venv\scripts\active
+.\.venv\scripts\activate
 pip install -r requirements.txt
 ```
 
-## Data Structure
+## Highrise Data Structure
 Highrise data: `D:\Baldante\data\2025-08-21\contacts`
 
-**Contacts** - Filenames contain actual names: `Mitchell Morris.txt`
+**Contact** files contain actual names: `Mitchell Morris.txt`
 - Name
 - Tags
 - Background
@@ -36,10 +36,10 @@ Highrise data: `D:\Baldante\data\2025-08-21\contacts`
 - Email Address
 - Phone Numbers
 - Notes
-- Emails _(unconfirmed but 99%)_
-- Tasks _(unconfirmed but 99%)_
+- Emails
+- Tasks
 
-**Company** - Filenames are numeric: `45985.578.txt`
+**Company** files are numeric: `45985.578.txt`
 - Name
 - Tags
 - Background
@@ -47,59 +47,97 @@ Highrise data: `D:\Baldante\data\2025-08-21\contacts`
 - Email Address
 - Phone Numbers
 - Notes
-- Emails _(unconfirmed but 99%)_
-- Tasks _(unconfirmed but 99%)_
+- Emails
+- Tasks
 
 
-
-
-![alt text](image.png)
-
+**Contact - Company Relationship**
 
 `[company].[id] <--> [contact].[company].[id]`
 
-
-
-
-**_email relationship_**
 ![alt text](<company to contact relationship.png>)
 
-- [ ] Find existing Tabs3 cases and add notes, tasks, emails to them from the highrise data
-- [ ] For the cases that don't exist, create them and add notes, tasks, emails to them
+**Email - Contact - Company Relationship**
+![alt text](image.png)
 
+
+
+## Merging data into Tabs3 cases
+
+`[company].[name]` = `[contacts].[company_name]` = Tabs3 case number
+
+```sql
+-- emails from [contacts] for Tabs3 cases
+select
+	e.id,
+	e.email_key,
+	e.contact_id,
+	e.company_id,
+	e.subject,
+	e.body,
+	e.written_date,
+	e.author,
+	cas.casnCaseID,
+	cas.source_id,
+	cas.source_db,
+	cas.source_ref
+from Baldante_Highrise..emails e
+join Baldante_Highrise..contacts c
+	on e.contact_id = c.id
+join sma_TRN_Cases cas
+	on cas.cassCaseNumber = c.company_name
+		and cas.source_db = 'Tabs3'
+
+union all
+
+-- Emails from [company] for Tabs3 cases
+select
+	e.id,
+	e.email_key,
+	e.contact_id,
+	e.company_id,
+	e.subject,
+	e.body,
+	e.written_date,
+	e.author,
+	cas.casnCaseID,
+	cas.source_id,
+	cas.source_db,
+	cas.source_ref
+from Baldante_Highrise..emails e
+join Baldante_Highrise..company com
+	on e.company_id = com.id
+join sma_TRN_Cases cas
+	on cas.cassCaseNumber = com.name
+		and cas.source_db = 'Tabs3'
+```
 
 ## Conversion Procedure
 
 ### Parse Highrise data
-[1_discovery\main.py](D:\Baldante\highrise\1_discovery\main.py)
+`D:\Baldante\highrise\1_discovery\main.py`
+
 ```py
-py -m highrise.parse_data.main <server> <database> <input>
+py -m highrise.parse_data.main <server> <database> <input_folder>
 py -m highrise.parse_data.main -s dylans\mssqlserver2022 -d baldante_highrise -i D:\Baldante\data\2025-08-21\contacts
 ```
 
-### Run migration scripts: 
-`D:\Baldante\highrise\3_conversion`
+### Run migration scripts
+`D:\Baldante\highrise\conversion`
 
 ```bash
 sami run -f D:\Baldante\highrise\conversion -s dylans\mssqlserver2022 -d baldante_consolidated
 ```
-
-
-**Contacts**
-1. clear data
-2. create functions and SPs
-3. create `[implementation_users]`
-4. insert Highrise contacts
-5. insert contact information into Highrise contacts
-6. insert contact information into Tabs3 contacts
-7. recreate `[AllContactInfo]`
-8. recreate `[IndvOrgContacts__Indexed]`
-
-**Cases**
-1. insert Cases from Highrise (case groups, case types, roles)
-2. insert Notes, Tasks, Emails into Highrise cases
-3. insert Notes, Tasks, Emails into Tabs3 cases
-
+**General strategy**
+1. create functions and SPs
+2. create `[implementation_users]`
+3. insert Highrise contacts
+4. insert contact information into Highrise contacts
+5. insert contact information into Tabs3 contacts
+6. recreate `[AllContactInfo]`
+7. recreate `[IndvOrgContacts__Indexed]`
+8. insert Cases from Highrise (case groups, case types, roles)
+9. insert Notes, Tasks, Emails into cases (Highrise and Tabs3)
 
 
 ## Table Reference
@@ -113,72 +151,3 @@ select * from Baldante..company
 select * from Baldante..notes
 select * from Baldante..tasks
 ```
-
-
-
-
-
-company = case number
-contacts w no company, create contact and either
-a) enter notes into contact
-b) create case, insert notes/emails/tasks
-
-
-
-contacts with company_name, find the tabs case (company_Name = cassnum)
-insert notes/tasks/emails
-
-contacts without company_name, create cases
-insert notes/tasks/emails
-
-
-
-
-
-## Cases:
-- [ ] for contacts with company_name, find the Tabs case
-	- contacts.company_Name = tabs case number
-	- [ ] insert notes
-	- [ ] insert tasks
-	- [ ] insert emails
-- [ ] for contacts without company_name:
-	- [ ] create a case
-	- [ ] insert notes
-	- [ ] insert tasks
-	- [ ] insert emails
-
-## Contacts:
-Attempt to match on name. If contact exists -> update that record. If not -> create one
-insert phone number
-insert email address
-insert address
-
-
-1. contacts with no name match
-	- create contact
-	- insert addr
-	- insert email
-	- insert phone
-2. contacts with name match
-	- insert addr
-	- insert email
-	- insert phone
----
-3. cases with no case number match
-	- create case
-	- insert tags
-	- insert plaintiff
-	- insert defendant
-	- insert emails
-	- insert notes
-	- insert tasks
-4. cases with case number match
-	- insert tags
-	- insert notes
-	- insert tasks
-	- insert emails
-
-
-- [ ] update existing contacts (name match)
-	- highrise contacts won't exist at this point, so no conflicts
-	- 
