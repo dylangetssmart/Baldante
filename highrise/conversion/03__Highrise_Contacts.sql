@@ -1,4 +1,4 @@
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 
@@ -54,7 +54,7 @@ insert into [sma_MST_IndvContacts]
 		null								 as [cinsSSNNo],
 		null								 as [cindBirthDate],
 		null								 as [cindDateOfDeath],
-		3									 as [cinnGender],  -- unknown
+		0									 as [cinnGender],  -- unknown
 		null								 as [cinsMobile],
 		--,LEFT(c.[Phone number - Mobile], 20)				AS [cinsMobile]
 		null								 as [cinsComments],
@@ -87,12 +87,23 @@ insert into [sma_MST_IndvContacts]
 		'contacts'							 as [source_ref]
 	--select c.*, ioci.*
 	from Baldante_Highrise..contacts c
-	left join IndvOrgContacts_Indexed ioci
-		on c.name = ioci.Name
-			and ioci.source_db = 'highrise'
-			and ioci.source_ref = 'contacts'
+	left join sma_mst_indvContacts i
+		on i.cinsfirstname = dbo.get_firstword(c.name)
+			and i.cinslastname = dbo.get_lastword(c.name)
 	where
-		ioci.TableIndex is null
+		i.cinncontactID is null
+
+--	join IndvOrgContacts_Indexed ioci
+--on ioci.Name = c.name
+--	and ioci.source_db = 'Tabs3'
+--	and ioci.CTG = 1
+
+--left join IndvOrgContacts_Indexed ioci
+--	on c.name = ioci.Name
+--		and ioci.source_db = 'highrise'
+--		and ioci.source_ref = 'contacts'
+--where
+--	ioci.TableIndex is null
 go
 
 alter table [sma_MST_IndvContacts] enable trigger all
@@ -185,6 +196,7 @@ insert into [sma_MST_Address]
 		a.id				  as source_id,
 		'highrise'			  as source_db,
 		'address'			  as source_ref
+	--select *
 	from Baldante_Highrise..address a
 	join Baldante_Highrise..contacts c
 		on c.id = a.contact_id
@@ -195,6 +207,9 @@ insert into [sma_MST_Address]
 	join [sma_MST_AddressTypes] as t
 		on t.addnContactCategoryID = indv.cinnContactCtg
 			and t.addsCode = 'HM'
+--where
+--	indv.cinnContactID = 21963
+
 go
 
 -- add 'Other' address to any contacts with no addresses
@@ -234,32 +249,30 @@ go
 
 
 -- update primary address
--- should not be relevant (highrise contacts either get Home or Other address)
-
---update [sma_MST_Address]
---set addbPrimary = 1
---from (
--- select
---	 i.cinnContactID															   as cid,
---	 a.addnAddressID															   as aid,
---	 ROW_NUMBER() over (partition by i.cinnContactID order by a.addnAddressID asc) as rownumber
--- from [sma_MST_Indvcontacts] i
--- join [sma_MST_Address] a
---	 on a.addnContactID = i.cinnContactID
---	 and a.addnContactCtgID = i.cinnContactCtg
---	 and a.addbPrimary <> 1
--- where i.cinnContactID not in (
---	  select
---		  i.cinnContactID
---	  from [sma_MST_Indvcontacts] i
---	  join [sma_MST_Address] a
---		  on a.addnContactID = i.cinnContactID
---		  and a.addnContactCtgID = i.cinnContactCtg
---		  and a.addbPrimary = 1
---	 )
---) a
---where a.rownumber = 1
---and a.aid = addnAddressID
+update [sma_MST_Address]
+set addbPrimary = 1
+from (
+ select
+	 i.cinnContactID															   as cid,
+	 a.addnAddressID															   as aid,
+	 ROW_NUMBER() over (partition by i.cinnContactID order by a.addnAddressID asc) as rownumber
+ from [sma_MST_Indvcontacts] i
+ join [sma_MST_Address] a
+	 on a.addnContactID = i.cinnContactID
+	 and a.addnContactCtgID = i.cinnContactCtg
+	 and a.addbPrimary <> 1
+ where i.cinnContactID not in (
+	  select
+		  i.cinnContactID
+	  from [sma_MST_Indvcontacts] i
+	  join [sma_MST_Address] a
+		  on a.addnContactID = i.cinnContactID
+		  and a.addnContactCtgID = i.cinnContactCtg
+		  and a.addbPrimary = 1
+	 )
+) a
+where a.rownumber = 1
+and a.aid = addnAddressID
 
 
 alter table [sma_MST_Address] enable trigger all
@@ -295,25 +308,25 @@ insert into [sma_MST_ContactNumbers]
 		[source_ref]
 	)
 	select
-		indv.cinnContactCtg						  as cnnncontactctgid,
-		indv.cinnContactID						  as cnnncontactid,
-		t.ctynContactNoTypeID					  as cnnnphonetypeid,
-		LEFT(dbo.FormatPhone(p.phone_number), 30) as cnnscontactnumber,
-		null									  as cnnsextension,
-		1										  as cnnbprimary,
-		null									  as cnnbvisible,
-		a.addnAddressID							  as cnnnaddressid,
-		'Home Phone'							  as cnnslabelcaption,
-		368										  as cnnnrecuserid,
-		GETDATE()								  as cnnddtcreated,
-		368										  as cnnnmodifyuserid,
-		GETDATE()								  as cnnddtmodified,
-		null									  as cnnnlevelno,
-		null									  as caseno,
-		null									  as saga,
-		p.id									  as source_id,
-		'highrise'								  as source_db,
-		'phone'									  as source_ref
+		indv.cinnContactCtg						 as cnnncontactctgid,
+		indv.cinnContactID						 as cnnncontactid,
+		t.ctynContactNoTypeID					 as cnnnphonetypeid,
+		LEFT(dbo.parsePhone(p.phone_number), 30) as cnnscontactnumber,
+		null									 as cnnsextension,
+		1										 as cnnbprimary,
+		null									 as cnnbvisible,
+		a.addnAddressID							 as cnnnaddressid,
+		'Home Phone'							 as cnnslabelcaption,
+		368										 as cnnnrecuserid,
+		GETDATE()								 as cnnddtcreated,
+		368										 as cnnnmodifyuserid,
+		GETDATE()								 as cnnddtmodified,
+		null									 as cnnnlevelno,
+		null									 as caseno,
+		null									 as saga,
+		p.id									 as source_id,
+		'highrise'								 as source_db,
+		'phone'									 as source_ref
 	from Baldante_Highrise..phone as p
 	join [sma_MST_IndvContacts] as indv
 		on indv.source_id = p.contact_id
@@ -331,24 +344,43 @@ insert into [sma_MST_ContactNumbers]
 go
 
 
--- Update primary contact numbers
---update [sma_MST_ContactNumbers]
---set cnnbPrimary = 0
---from (
--- select
---	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as rownumber,
---	 cnnnContactNumberID														 as contactnumberid
--- from [sma_MST_ContactNumbers]
--- where cnnnContactCtgID = (
---	  select
---		  ctgnCategoryID
---	  from [dbo].[sma_MST_ContactCtg]
---	  where ctgsDesc = 'Individual'
---	 )
---) a
---where a.rownumber <> 1
---and a.contactnumberid = cnnnContactNumberID
---go
+--------------------------------------------------------------
+--ONE PHONE NUMBER AS PRIMARY
+--------------------------------------------------------------
+update [sma_MST_ContactNumbers]
+set cnnbPrimary = 0
+from (
+ select
+	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as RowNumber,
+	 cnnnContactNumberID														 as ContactNumberID
+ from [sma_MST_ContactNumbers]
+ where cnnnContactCtgID = (
+	  select
+		  ctgnCategoryID
+	  from [sma_MST_ContactCtg]
+	  where ctgsDesc = 'Individual'
+	 )
+) A
+where A.RowNumber <> 1
+and A.ContactNumberID = cnnnContactNumberID
+
+
+update [sma_MST_ContactNumbers]
+set cnnbPrimary = 0
+from (
+ select
+	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as RowNumber,
+	 cnnnContactNumberID														 as ContactNumberID
+ from [sma_MST_ContactNumbers]
+ where cnnnContactCtgID = (
+	  select
+		  ctgnCategoryID
+	  from [sma_MST_ContactCtg]
+	  where ctgsDesc = 'Organization'
+	 )
+) A
+where A.RowNumber <> 1
+and A.ContactNumberID = cnnnContactNumberID
 
 
 alter table [sma_MST_ContactNumbers] enable trigger all

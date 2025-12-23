@@ -1,4 +1,4 @@
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 /* ------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ insert into [sma_MST_CaseType]
 		(
 		 select
 			 cgpnCaseGroupID
-		 from sma_MST_caseGroup
+		 from sma_MST_CaseGroup
 		 where cgpsDscrptn = 'General Negligence'
 		)					as [cstnGroupID],
 		null				as [cstnGovtMunType],
@@ -177,7 +177,7 @@ go
 /* ------------------------------------------------------------------------------
 Create default SubRoleCodes
 */ ------------------------------------------------------------------------------
-insert into [sma_MST_SubRoleCode]
+insert into [sma_mst_SubRoleCode]
 	(
 		srcsDscrptn,
 		srcnRoleID
@@ -198,7 +198,7 @@ insert into [sma_MST_SubRoleCode]
 	select
 		srcsDscrptn,
 		srcnRoleID
-	from [sma_MST_SubRoleCode];
+	from [sma_mst_SubRoleCode];
 go
 
 
@@ -217,7 +217,7 @@ insert into sma_MST_SubRole
 		src.srcsDscrptn	  as sbrsDscrptn,
 		ct.cstnCaseTypeID as sbrnCaseTypeID,
 		src.srcnCodeID	  as sbrnTypeCode
-	from sma_MST_SubRoleCode src
+	from sma_mst_SubRoleCode src
 	cross join sma_MST_CaseType ct
 	where
 		ct.cstsType = 'Highrise'
@@ -264,12 +264,12 @@ with
 		 union all
 		 select
 			 com.id,
-			 com.name  as case_number,
+			 com.Name  as case_number,
 			 com.filename,
 			 'company' as ref
 		 from Baldante_Highrise..company com
 		 left join sma_TRN_Cases cas
-			 on cas.cassCaseNumber = com.name
+			 on cas.cassCaseNumber = com.Name
 			 and cas.source_db = 'Tabs3'
 		 where cas.casnCaseID is null
 		)
@@ -413,13 +413,13 @@ insert into [sma_TRN_Cases]
 		)						as casnorgcasetypeid,
 		''						as casscaption,
 		0						as cassmdl,
-		--(
-		-- select
-		--	 office_id
-		-- from sma_MST_Offices	
-		-- where office_name = (select OfficeName from conversion.office)
-		--)			   as office_id,
-		4						as office_id,
+		(
+		 select
+			 office_id
+		 from sma_mst_offices
+		 where office_name = 'Main - PA'
+		)						as office_id,
+		--4						as office_id,
 		null					as [lip],
 		null					as [casnseriousinj],
 		null					as [casncorpdefn],

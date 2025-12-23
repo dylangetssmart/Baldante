@@ -1,108 +1,9 @@
-/*
-
-find tabs contacts and add contact info from highrise
-
-*/
-
-
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 
 /* ------------------------------------------------------------------------------
-Insert [sma_MST_IndvContacts] from Highrise that don't exist (match on name)
-*/ ------------------------------------------------------------------------------
---exec AddBreadcrumbsToTable 'sma_MST_IndvContacts'
---alter table [sma_MST_IndvContacts] disable trigger all
---go
-
---insert into [sma_MST_IndvContacts]
---	(
---		[cinsPrefix],
---		[cinsSuffix],
---		[cinsFirstName],
---		[cinsMiddleName],
---		[cinsLastName],
---		[cinsHomePhone],
---		[cinsWorkPhone],
---		[cinsSSNNo],
---		[cindBirthDate],
---		[cindDateOfDeath],
---		[cinnGender],
---		[cinsMobile],
---		[cinsComments],
---		[cinnContactCtg],
---		[cinnContactTypeID],
---		[cinnContactSubCtgID],
---		[cinnRecUserID],
---		[cindDtCreated],
---		[cinbStatus],
---		[cinbPreventMailing],
---		[cinsNickName],
---		[cinsPrimaryLanguage],
---		[cinsOtherLanguage],
---		[cinnRace],
---		[saga],
---		[source_db],
---		[source_ref]
---	)
---	select
---		null								 as [cinsPrefix],
---		null								 as [cinsSuffix],
---		LEFT(dbo.get_firstword(c.name), 100) as [cinsFirstName],
---		null								 as [cinsMiddleName],
---		LEFT(dbo.get_lastword(c.name), 100)	 as [cinsLastName],
---		null								 as [cinsHomePhone],
---		null								 as [cinsWorkPhone],
---		null								 as [cinsSSNNo],
---		null								 as [cindBirthDate],
---		null								 as [cindDateOfDeath],
---		3									 as [cinnGender],  -- unknown
---		null								 as [cinsMobile],
---		--,LEFT(c.[Phone number - Mobile], 20)				AS [cinsMobile]
---		null								 as [cinsComments],
---		--,REPLACE(c.Background, '|', CHAR(13) + CHAR(10)) AS [cinsComments]
---		1									 as [cinnContactCtg],
---		(
---		 select
---			 octnOrigContactTypeID
---		 from [sma_MST_OriginalContactTypes]
---		 where octsDscrptn = 'General'
---			 and octnContactCtgID = 1
---		)									 as [cinnContactTypeID],
---		(
---		 select
---			 cscnContactSubCtgID
---		 from [sma_MST_ContactSubCategory]
---		 where cscsDscrptn = 'Adult'
---		)									 as cinnContactSubCtgID,
---		368									 as cinnRecUserID,
---		GETDATE()							 as cindDtCreated,
---		1									 as [cinbStatus],			-- Hardcode Status as ACTIVE 
---		0									 as [cinbPreventMailing],
---		null								 as [cinsNickName],
---		null								 as [cinsPrimaryLanguage],
---		null								 as [cinsOtherLanguage],
---		null								 as [cinnrace],
---		c.id								 as [saga],
---		'highrise'							 as [source_db],
---		'contacts'							 as [source_ref]
---	--select c.*, ioci.*
---	from Baldante_Highrise..contacts c
---	left join IndvOrgContacts_Indexed ioci
---		on c.name = ioci.Name
---			and ioci.source_db = 'highrise'
---			and ioci.source_ref = 'contacts'
---	where
---		ioci.TableIndex is null
---go
-
---alter table [sma_MST_IndvContacts] enable trigger all
---go
-
-
-/* ------------------------------------------------------------------------------
-Insert [sma_MST_Address] for highrise contacts
+Insert [sma_MST_Address] from highrise
 ------------------------------------------------------------------------------ */
 exec AddBreadcrumbsToTable 'sma_MST_Address';
 alter table [sma_MST_Address] disable trigger all
@@ -149,7 +50,7 @@ insert into [sma_MST_Address]
 		[source_db],
 		[source_ref]
 	)
-	select
+	select distinct
 		ioci.CTG			  as addncontactctgid,
 		ioci.CID			  as addncontactid,
 		t.addnAddTypeID		  as addnaddresstypeid,
@@ -165,7 +66,7 @@ insert into [sma_MST_Address]
 		null				  as addscounty,
 		null				  as addscountry,
 		null				  as addbisresidence,
-		1					  as addbprimary,
+		0					  as addbprimary,
 		null,
 		null,
 		null,
@@ -187,13 +88,14 @@ insert into [sma_MST_Address]
 		a.id				  as source_id,
 		'highrise'			  as source_db,
 		'address'			  as source_ref
-	--select *
+	--select distinct c.id, c.name, a.address, ioci.CID, ioci.CTG
 	from Baldante_Highrise..address a
 	join Baldante_Highrise..contacts c
 		on c.id = a.contact_id
 	join IndvOrgContacts_Indexed ioci
 		on ioci.Name = c.name
 			and ioci.source_db = 'Tabs3'
+			and ioci.CTG = 1
 	--join sma_MST_IndvContacts indv
 	--	on c.id = indv.saga
 	--		and indv.[source_db] = 'highrise'
@@ -201,6 +103,15 @@ insert into [sma_MST_Address]
 	join [sma_MST_AddressTypes] as t
 		on t.addnContactCategoryID = ioci.CTG
 			and t.addsCode = 'HM'
+	left join sma_MST_Address addr
+		on addr.addnContactID = ioci.CID
+			and addr.addnContactCtgID = ioci.CTG
+			and addr.addsAddress1 = LEFT(a.[address], 75)
+			and addr.addsAddTypeCode = 'HM'
+	where
+		ISNULL(a.address, '') <> ''
+		and addr.addnAddressID is null
+--and ioci.CID = 12663
 
 ;
 go
@@ -272,7 +183,7 @@ alter table [sma_MST_Address] enable trigger all
 go
 
 /* ------------------------------------------------------------------------------
-Insert [sma_MST_ContactNumbers] for highrise contacts
+Insert [sma_MST_ContactNumbers] from highrise
 ------------------------------------------------------------------------------ */
 exec AddBreadcrumbsToTable 'sma_MST_ContactNumbers';
 alter table [sma_MST_ContactNumbers] disable trigger all
@@ -301,65 +212,95 @@ insert into [sma_MST_ContactNumbers]
 		[source_ref]
 	)
 	select
-		ioci.ctg								  as cnnncontactctgid,
-		ioci.CID								  as cnnncontactid,
-		t.ctynContactNoTypeID					  as cnnnphonetypeid,
-		LEFT(dbo.FormatPhone(p.phone_number), 30) as cnnscontactnumber,
-		null									  as cnnsextension,
-		1										  as cnnbprimary,
-		null									  as cnnbvisible,
-		a.addnAddressID							  as cnnnaddressid,
-		'Home Phone'							  as cnnslabelcaption,
-		368										  as cnnnrecuserid,
-		GETDATE()								  as cnnddtcreated,
-		368										  as cnnnmodifyuserid,
-		GETDATE()								  as cnnddtmodified,
-		null									  as cnnnlevelno,
-		null									  as caseno,
-		null									  as saga,
-		p.id									  as source_id,
-		'highrise'								  as source_db,
-		'phone'									  as source_ref
+		ioci.ctg								 as cnnncontactctgid,
+		ioci.CID								 as cnnncontactid,
+		t.ctynContactNoTypeID					 as cnnnphonetypeid,
+		LEFT(dbo.parsePhone(p.phone_number), 30) as cnnscontactnumber,
+		null									 as cnnsextension,
+		1										 as cnnbprimary,
+		null									 as cnnbvisible,
+		--a.addnAddressID							  as cnnnaddressid,
+		null									 as cnnnaddressid,
+		'Home Phone'							 as cnnslabelcaption,
+		368										 as cnnnrecuserid,
+		GETDATE()								 as cnnddtcreated,
+		368										 as cnnnmodifyuserid,
+		GETDATE()								 as cnnddtmodified,
+		null									 as cnnnlevelno,
+		null									 as caseno,
+		null									 as saga,
+		p.id									 as source_id,
+		'highrise'								 as source_db,
+		'phone'									 as source_ref
+	--select 	LEFT(dbo.FormatPhone(p.phone_number), 30) as FormatPhone,
+	--		LEFT(dbo.parsePhone(p.phone_number), 30) as ParsePhone,
+	--		p.phone_number
 	from Baldante_Highrise..phone as p
 	join Baldante_Highrise..contacts c
 		on p.contact_id = c.id
 	join IndvOrgContacts_Indexed ioci
 		on ioci.Name = c.name
 			and ioci.source_db = 'Tabs3'
+			and ioci.CTG = 1
 	--join [sma_MST_IndvContacts] as indv
 	--	on indv.saga = p.contact_id
 	--		and indv.[source_db] = 'highrise'
 	--		and indv.[source_ref] = 'contacts'
-	join [sma_MST_Address] as a
-		on a.addnContactID = ioci.CID
-			and a.addnContactCtgID = ioci.CTG
-			and a.addbPrimary = 1
+	--join [sma_MST_Address] as a
+	--	on a.addnContactID = ioci.CID
+	--		and a.addnContactCtgID = ioci.CTG
+	--		and a.addbPrimary = 1
 	join sma_MST_ContactNoType as t
 		on t.ctysDscrptn = 'Home Primary Phone'
 			and t.ctynContactCategoryID = 1
+	left join sma_MST_ContactNumbers cn
+		on cn.cnnnContactID = ioci.CID
+			and cn.cnnnContactCtgID = ioci.CTG
+			and cn.cnnsContactNumber = LEFT(dbo.FormatPhone(p.phone_number), 30)
+			and cn.cnnnPhoneTypeID = t.ctynContactNoTypeID
 	where
-		ISNULL(p.phone_number, '') <> '';
+		ISNULL(p.phone_number, '') <> ''
+		and cn.cnnnContactNumberID is null
 go
 
 
--- Update primary contact numbers
+--------------------------------------------------------------
+--ONE PHONE NUMBER AS PRIMARY
+--------------------------------------------------------------
+update [sma_MST_ContactNumbers]
+set cnnbPrimary = 0
+from (
+ select
+	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as RowNumber,
+	 cnnnContactNumberID														 as ContactNumberID
+ from [sma_MST_ContactNumbers]
+ where cnnnContactCtgID = (
+	  select
+		  ctgnCategoryID
+	  from [sma_MST_ContactCtg]
+	  where ctgsDesc = 'Individual'
+	 )
+) A
+where A.RowNumber <> 1
+and A.ContactNumberID = cnnnContactNumberID
+
+
 --update [sma_MST_ContactNumbers]
 --set cnnbPrimary = 0
 --from (
 -- select
---	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as rownumber,
---	 cnnnContactNumberID														 as contactnumberid
+--	 ROW_NUMBER() over (partition by cnnnContactID order by cnnnContactNumberID) as RowNumber,
+--	 cnnnContactNumberID														 as ContactNumberID
 -- from [sma_MST_ContactNumbers]
 -- where cnnnContactCtgID = (
 --	  select
 --		  ctgnCategoryID
---	  from [dbo].[sma_MST_ContactCtg]
---	  where ctgsDesc = 'Individual'
+--	  from [sma_MST_ContactCtg]
+--	  where ctgsDesc = 'Organization'
 --	 )
---) a
---where a.rownumber <> 1
---and a.contactnumberid = cnnnContactNumberID
---go
+--) A
+--where A.RowNumber <> 1
+--and A.ContactNumberID = cnnnContactNumberID
 
 
 alter table [sma_MST_ContactNumbers] enable trigger all
@@ -404,18 +345,25 @@ insert into [sma_MST_EmailWebsite]
 		e.id			as source_id,
 		'highrise'		as source_db,
 		'email_address' as source_ref
+	--select *
 	from Baldante_Highrise..email_address as e
 	join Baldante_Highrise..contacts c
 		on e.contact_id = c.id
 	join IndvOrgContacts_Indexed ioci
 		on ioci.Name = c.name
 			and ioci.source_db = 'Tabs3'
+			and ioci.CTG = 1
 	--join [sma_MST_IndvContacts] as indv
 	--	on indv.saga = e.contact_id
 	--		and indv.[source_db] = 'highrise'
 	--		and indv.[source_ref] = 'contacts'
+	left join sma_MST_EmailWebsite ew
+		on ew.cewnContactID = ioci.CID
+			and ew.cewnContactCtgID = ioci.CTG
+			and ew.cewsEmailWebSite = e.email_address
 	where
-		ISNULL(e.email_address, '') <> '';
+		ISNULL(e.email_address, '') <> ''
+		and ew.cewnEmlWSID is null
 go
 
 alter table [sma_MST_EmailWebsite] enable trigger all

@@ -15,7 +15,7 @@ notes:
 ######################################################################################
 */
 
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 set ansi_padding on

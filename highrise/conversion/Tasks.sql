@@ -1,4 +1,4 @@
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 
@@ -169,6 +169,25 @@ go
 select * from stg_Highrise_Tasks
 
 /* ------------------------------------------------------------------------------
+Insert [sma_MST_TaskCategory]
+*/ ------------------------------------------------------------------------------
+--select * from sma_MST_TaskCategory smtc
+
+insert into [sma_MST_TaskCategory]
+	(
+		tskCtgDescription
+	)
+
+	select
+		'Highrise Task'
+	except
+	select
+		tskCtgDescription
+	from [sma_MST_TaskCategory]
+go
+
+
+/* ------------------------------------------------------------------------------
 Insert [sma_TRN_TaskNew]
 */ ------------------------------------------------------------------------------
 exec AddBreadcrumbsToTable 'sma_TRN_TaskNew'
@@ -179,6 +198,7 @@ insert into [sma_TRN_TaskNew]
 	(
 		[tskCaseID],
 		[tskDueDate],
+		[tskFollowDate],
 		[tskStartDate],
 		[tskCompletedDt],
 		[tskRequestorID],
@@ -201,10 +221,23 @@ insert into [sma_TRN_TaskNew]
 	)
 	select
 		t.cas_casnCaseID as [tskcaseid],
-		null			 as [tskduedate],
-		null			 as [tskstartdate],
+		case
+			when ISDATE(t.written_date) = 1 and
+				t.written_date between '1/1/1900' and '6/6/2079' then t.written_date
+			else null
+		end				 as [tskduedate],
+		case
+			when ISDATE(t.written_date) = 1 and
+				t.written_date between '1/1/1900' and '6/6/2079' then t.written_date
+			else null
+		end				 as [tskFollowDate],
+		case
+			when ISDATE(t.written_date) = 1 and
+				t.written_date between '1/1/1900' and '6/6/2079' then t.written_date
+			else null
+		end				 as [tskstartdate],
 		null			 as [tskcompleteddt],
-		null			 as [tskrequestorid],
+		iu.SAusrnUserID	 as [tskrequestorid],
 		iu.SAusrnUserID	 as [tskassigneeid],
 		null			 as [tskreminderdays],
 		ISNULL(NULLIF(CONVERT(VARCHAR(MAX), t.body), '') + CHAR(13), '') +
@@ -227,9 +260,9 @@ insert into [sma_TRN_TaskNew]
 		 select
 			 tskctgid
 		 from sma_MST_TaskCategory
-		 where tskCtgDescription = 'Other'
+		 where tskCtgDescription = 'Highrise Task'
 		)				 as [tskctgid],
-		'Highrise Task'	 as [tsksummary],  --task subject--
+		t.body			 as [tsksummary],  --Subject
 		3				 as [tskpriority], -- Normal priority
 		0				 as [tskcompleted], -- Not Started
 		null			 as [saga],

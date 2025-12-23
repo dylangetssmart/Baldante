@@ -17,7 +17,7 @@
  *  dbo.ValidDate
  **************************************************/
 
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 -----
@@ -929,4 +929,60 @@ BEGIN
         'PM', ' PM')
     );
 END
+GO
+
+
+if OBJECT_ID('dbo.ParsePhone', 'FN') is not null
+	drop function dbo.ParsePhone;
+
+go
+
+CREATE OR ALTER FUNCTION dbo.ParsePhone (@phone VARCHAR(MAX))
+RETURNS VARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @Extracted VARCHAR(20) = '';
+    DECLARE @Start INT;
+
+    -- 1. Look for standard dash pattern: 000-000-0000
+    SET @Start = PATINDEX('%[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]%', @phone);
+    IF @Start > 0
+    BEGIN
+        SET @Extracted = SUBSTRING(@phone, @Start, 12);
+    END
+    ELSE
+    BEGIN
+        -- 2. Look for parenthesis pattern: (000) 000-0000
+        SET @Start = PATINDEX('%([0-9][0-9][0-9]) [0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]%', @phone);
+        IF @Start > 0
+        BEGIN
+            SET @Extracted = SUBSTRING(@phone, @Start, 14);
+        END
+        ELSE
+        BEGIN
+            -- 3. Fallback: Look for 10 plain digits in a row: 0000000000
+            SET @Start = PATINDEX('%[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]%', @phone);
+            IF @Start > 0
+                SET @Extracted = SUBSTRING(@phone, @Start, 10);
+        END
+    END
+
+    -- 4. Strip everything except digits from the extracted portion
+    DECLARE @Digits VARCHAR(10) = '';
+    DECLARE @Pos INT = 1;
+
+    WHILE @Pos <= LEN(@Extracted)
+    BEGIN
+        IF SUBSTRING(@Extracted, @Pos, 1) LIKE '[0-9]'
+            SET @Digits = @Digits + SUBSTRING(@Extracted, @Pos, 1);
+        SET @Pos = @Pos + 1;
+    END
+
+    -- 5. Return formatted string if we found 10 digits
+    IF LEN(@Digits) = 10
+        RETURN '(' + SUBSTRING(@Digits, 1, 3) + ') ' + SUBSTRING(@Digits, 4, 3) + '-' + SUBSTRING(@Digits, 7, 4);
+
+    -- If no valid pattern was found, return the original data
+    RETURN @phone; 
+END;
 GO

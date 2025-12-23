@@ -1,4 +1,4 @@
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 
@@ -75,8 +75,7 @@ insert into sma_MST_CaseTags
 	cross apply STRING_SPLIT(c.tags, ',') ss
 	where
 		ISNULL(c.tags, '') <> ''
-		and
-		not exists (
+		and not exists (
 		 select
 			 1
 		 from dbo.sma_MST_CaseTags t
@@ -91,6 +90,7 @@ exec AddBreadcrumbsToTable 'sma_TRN_CaseTags'
 alter table sma_TRN_CaseTags disable trigger all;
 go
 
+-- Add case tags to all cases
 insert into sma_TRN_CaseTags
 	(
 		[CaseID],
@@ -110,22 +110,23 @@ insert into sma_TRN_CaseTags
 		GETDATE()  as DtCreated,
 		null	   as DeleteUserID,
 		null	   as DtDeleted,
-		c.id	   as [source_id],
+		null	   as [source_id],
 		'highrise' as [source_db],
 		'contacts' as [source_ref]
 	from Baldante_Highrise..contacts c
 	join sma_TRN_Cases cas
-		--on stc.cassCaseNumber = c.company_name
-		on cas.source_id = c.id
-			and [source_db] = 'highrise'
+		on cas.cassCaseNumber = c.company_name
+	--on cas.source_id = c.id
+	--	and [source_db] = 'highrise'
 	cross apply STRING_SPLIT(c.tags, ',') ss
 	join dbo.sma_MST_CaseTags t
 		on t.Name = TRIM(ss.value)
 	where
-		ISNULL(c.tags, '') <> '';
+		ISNULL(c.tags, '') <> ''
+	order by cas.casnCaseID
 go
 
--- Insert 'Highrise' tag per case
+-- Add 'Highrise' tag to Highrise cases
 exec AddBreadcrumbsToTable 'sma_TRN_CaseTags';
 alter table sma_TRN_CaseTags disable trigger all;
 go
@@ -157,8 +158,7 @@ insert into sma_TRN_CaseTags
 		on t.Name = 'Highrise'
 	where
 		cas.source_db = 'highrise'
-		and
-		not exists (
+		and not exists (
 		 select
 			 1
 		 from sma_TRN_CaseTags ct
@@ -166,10 +166,6 @@ insert into sma_TRN_CaseTags
 			 and ct.TagID = t.TagID
 		);
 go
-
-alter table dbo.sma_TRN_CaseTags enable trigger all;
-go
-
 
 alter table dbo.sma_TRN_CaseTags enable trigger all;
 go

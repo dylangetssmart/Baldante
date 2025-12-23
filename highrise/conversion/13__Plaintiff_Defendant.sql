@@ -1,4 +1,4 @@
-use Baldante_Consolidated
+use SATenantConsolidated_Tabs3_and_MyCase
 go
 
 ---
@@ -101,6 +101,7 @@ insert into [sma_TRN_Plaintiff]
 	from Baldante_Highrise..contacts c
 	join sma_TRN_Cases cas
 		on cas.source_id = c.id
+		and cas.source_db = 'highrise'
 	join IndvOrgContacts_Indexed ioci
 		on ioci.source_id = CONVERT(VARCHAR, c.id)
 	join [sma_MST_SubRole] s
